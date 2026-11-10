@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://bn4pgwlxxkxqs"]
+
+[ext_resource type="Texture2D" uid="uid://dgjro23iydgd7" path="res://Assets/Evcavator/texture.png" id="1_tex"]
+
+[resource]
+resource_name = "Eve (pixel palette)"
+albedo_texture = ExtResource("1_tex")
+metallic_specular = 0.15
+texture_filter = 0

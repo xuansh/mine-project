@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://olkeadrk0r0m"]
+
+[ext_resource type="Script" uid="uid://b6w0fq2slpmlq" path="res://Scenes/MiningField/mine_field.gd" id="1_6lt4f"]
+[ext_resource type="Environment" uid="uid://di8yeo0ht4ldw" path="res://Assets/Environments/mine_soft.tres" id="1_34eps"]
+[ext_resource type="Script" uid="uid://ckncg6l32af8o" path="res://Scenes/Camera/camera_3d.gd" id="2_6lt4f"]
+[ext_resource type="Script" uid="uid://dwohq3rlt2ini" path="res://Scenes/MineableEntity/mineable_entity.gd" id="3_bb0u5"]
+[ext_resource type="MeshLibrary" uid="uid://2mel1vqw41eu" path="res://Resources/ore_map.meshlib" id="3_s31g4"]
+[ext_resource type="Resource" uid="uid://0tv44qslkr0d" path="res://Resources/Excavators/basic_mini_excavator.tres" id="4_s31g4"]
+[ext_resource type="Texture2D" uid="uid://c3lp0noyx5ji" path="res://Assets/Evcavator/excavator_palette.png" id="5_cx8pv"]
+[ext_resource type="ArrayMesh" uid="uid://d3qldlskmoxs4" path="res://Assets/Evcavator/basic_mini_excavator.obj" id="6_4p7ve"]
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_6le5l"]
+vertices = PackedVector3Array(-24.938477, 1, -25.507324, -24.938477, 1, 25.492676, 25.061523, 1, 25.492676, 25.061523, 1, -25.507324)
+polygons = [PackedInt32Array(3, 2, 0), PackedInt32Array(0, 2, 1)]
+agent_max_climb = 258.83
+agent_max_slope = 72.57
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qov5c"]
+albedo_texture = ExtResource("5_cx8pv")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3x14q"]
+size = Vector3(1, 1, 2.4541016)
+
+[node name="Node3D" type="Node3D" unique_id=1873184113 node_paths=PackedStringArray("gridmap")]
+script = ExtResource("1_6lt4f")
+gridmap = NodePath("BackgroundRegion3D/CSGGround/GridMap")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2052262455]
+environment = ExtResource("1_34eps")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1262282653]
+transform = Transform3D(0.81915206, -0.4698463, 0.32902178, 0, 0.57357645, 0.81915206, -0.57357645, -0.6710101, 0.4698463, 0, 8.168062, 0)
+light_color = Color(0.9729921, 0.8507017, 0.7270349, 1)
+light_angular_distance = 3.0
+light_specular = 0.25
+light_bake_mode = 1
+shadow_enabled = true
+shadow_blur = 1.8
+directional_shadow_mode = 0
+directional_shadow_max_distance = 40.0
+sky_mode = 1
+
+[node name="BackgroundRegion3D" type="NavigationRegion3D" parent="." unique_id=544014777]
+navigation_mesh = SubResource("NavigationMesh_6le5l")
+
+[node name="CSGGround" type="CSGBox3D" parent="BackgroundRegion3D" unique_id=2145722546]
+use_collision = true
+size = Vector3(50, 1, 50)
+
+[node name="GridMap" type="GridMap" parent="BackgroundRegion3D/CSGGround" unique_id=1892988559]
+mesh_library = ExtResource("3_s31g4")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1904077215]
+transform = Transform3D(1, 0, 0, 0, 0.7071068, 0.7071068, 0, -0.7071068, 0.7071068, 0, 83.92291, 86.732796)
+fov = 19.6
+script = ExtResource("2_6lt4f")
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="." unique_id=1421503419]
+script = ExtResource("3_bb0u5")
+mineable_data = ExtResource("4_s31g4")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterBody3D" unique_id=184027237]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0.7445, 0)
+material_override = SubResource("StandardMaterial3D_qov5c")
+mesh = ExtResource("6_4p7ve")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D" unique_id=1017681655]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.168645, -0.3203125)
+shape = SubResource("BoxShape3D_3x14q")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="CharacterBody3D" unique_id=2063944660]
+target_desired_distance = 0.1
+path_height_offset = 0.5

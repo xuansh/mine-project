@@ -1,0 +1,81 @@
+[gd_scene format=3 uid="uid://bmoytm8dh5cpq"]
+
+[ext_resource type="Material" uid="uid://clhvw8fougcn4" path="res://Resources/evecavatirs_self_glow.tres" id="1_npcsw"]
+[ext_resource type="VoxelGIData" uid="uid://crtvraohqt3vj" path="res://Scenes/test/node_3d.VoxelGI_data.res" id="2_upwws"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_upwws"]
+sky_top_color = Color(0, 0, 0, 1)
+sky_horizon_color = Color(0, 0, 0, 1)
+ground_bottom_color = Color(0, 0, 0, 1)
+ground_horizon_color = Color(0, 0, 0, 1)
+
+[sub_resource type="Sky" id="Sky_ohxyp"]
+sky_material = SubResource("ProceduralSkyMaterial_upwws")
+
+[sub_resource type="Environment" id="Environment_t24i0"]
+background_mode = 2
+sky = SubResource("Sky_ohxyp")
+glow_enabled = true
+glow_levels/2 = 1.0
+glow_levels/3 = 1.0
+glow_levels/4 = 0.5
+glow_levels/5 = 0.2
+glow_hdr_threshold = 0.0
+fog_mode = 1
+fog_light_color = Color(0, 0, 0, 1)
+fog_density = 1.0
+fog_depth_begin = 5.0
+fog_depth_end = 15.0
+volumetric_fog_density = 0.8504
+volumetric_fog_albedo = Color(0.40578339, 0.40578339, 0.4057832, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_sks2c"]
+size = Vector3(8.954102, 0.44433594, 6.9470215)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6le5l"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fec2b"]
+metallic = 1.0
+metallic_specular = 1.0
+roughness = 0.32
+
+[sub_resource type="BoxMesh" id="BoxMesh_32kpb"]
+material = SubResource("StandardMaterial3D_fec2b")
+size = Vector3(0.5805664, 0.4765625, 1)
+
+[node name="Node3D" type="Node3D" unique_id=1086194739]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1788918194]
+environment = SubResource("Environment_t24i0")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1353357464]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.20490795, 0)
+mesh = SubResource("BoxMesh_sks2c")
+
+[node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=639135133]
+transform = Transform3D(0.5756266, -0.5159187, -0.63441473, 0.74058706, -2.9372318e-08, 0.6719605, -0.34667695, -0.8566376, 0.38208267, -3.0143225, 2.3066225, 1.5281634)
+light_color = Color(0.5209543, 0.34583333, 0.71878743, 1)
+light_energy = 4.6
+shadow_enabled = true
+shadow_blur = 4.792
+
+[node name="Camera3D" type="Camera3D" parent="SpotLight3D" unique_id=168447262]
+transform = Transform3D(1, 0, 0, 0, 0.6227714, -0.7824039, 0, 0.7824039, 0.6227714, 0, -3.1611788, 0.38643813)
+keep_aspect = 0
+fov = 85.95707
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=1692128294]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6112849, 0)
+material_override = ExtResource("1_npcsw")
+mesh = SubResource("BoxMesh_6le5l")
+
+[node name="ReflectionProbe" type="ReflectionProbe" parent="." unique_id=30895175]
+visible = false
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="." unique_id=936581199]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.3750975, 0.5523573, 0)
+mesh = SubResource("BoxMesh_32kpb")
+
+[node name="VoxelGI" type="VoxelGI" parent="." unique_id=719670207]
+subdiv = 3
+data = ExtResource("2_upwws")

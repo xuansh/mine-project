@@ -1,0 +1,61 @@
+[gd_scene format=3 uid="uid://olkeadrk0r0m"]
+
+[ext_resource type="Script" uid="uid://b6w0fq2slpmlq" path="res://Scenes/MiningField/mine_field.gd" id="1_6lt4f"]
+[ext_resource type="Environment" uid="uid://di8yeo0ht4ldw" path="res://Assets/Environments/mine_soft.tres" id="1_34eps"]
+[ext_resource type="Script" uid="uid://ckncg6l32af8o" path="res://Scenes/Camera/camera_3d.gd" id="2_6lt4f"]
+[ext_resource type="MeshLibrary" uid="uid://2mel1vqw41eu" path="res://Resources/ore_map.meshlib" id="3_s31g4"]
+[ext_resource type="PackedScene" uid="uid://d3q0dk5rs83tc" path="res://Scenes/MineableEntity/basic_mini_excavator.tscn" id="6_6lt4f"]
+[ext_resource type="Material" path="res://Resources/Materials/ground_rock.tres" id="10_ground"]
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_6le5l"]
+vertices = PackedVector3Array(-24.5, 1, -26.84082, -24.5, 1, 24.40918, 28.75, 0.75, 24.40918, 28.75, 0.75, -26.84082)
+polygons = [PackedInt32Array(3, 2, 0), PackedInt32Array(0, 2, 1)]
+agent_max_climb = 258.83
+agent_max_slope = 72.57
+
+[node name="Node3D" type="Node3D" unique_id=1873184113 node_paths=PackedStringArray("gridmap")]
+script = ExtResource("1_6lt4f")
+gridmap = NodePath("BackgroundRegion3D/CSGGround/GridMap")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2052262455]
+environment = ExtResource("1_34eps")
+
+[node name="BackgroundRegion3D" type="NavigationRegion3D" parent="." unique_id=544014777]
+navigation_mesh = SubResource("NavigationMesh_6le5l")
+
+[node name="CSGGround" type="CSGBox3D" parent="BackgroundRegion3D" unique_id=2145722546]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.1704102)
+use_collision = true
+size = Vector3(50, 1, 52.34082)
+material = ExtResource("10_ground")
+
+[node name="GridMap" type="GridMap" parent="BackgroundRegion3D/CSGGround" unique_id=1892988559]
+mesh_library = ExtResource("3_s31g4")
+
+[node name="CSGGround2" type="CSGBox3D" parent="BackgroundRegion3D" unique_id=1958166740]
+transform = Transform3D(0.999, 0, 0, 0, 0.999, 0, 0, 0, 0.999, 27, 0, -1.1794834)
+use_collision = true
+size = Vector3(4.6904297, 1, 52.36133)
+material = ExtResource("10_ground")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1904077215]
+transform = Transform3D(0.7071068, -0.3535534, 0.6123724, 0, 0.8660254, 0.5, -0.7071068, -0.3535534, 0.6123724, 42.87, 35.5, 41.67)
+projection = 1
+size = 40.0
+script = ExtResource("2_6lt4f")
+
+[node name="CharacterBody3D" parent="." unique_id=1455790257 instance=ExtResource("6_6lt4f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1725226773]
+transform = Transform3D(0.7071068, 0.485, -0.5148, 0, 0.7276, 0.686, 0.7071068, -0.485, 0.5148, -25.7, 34.3, 25.7)
+light_color = Color(1, 0.886275, 0.721569, 1)
+light_energy = 1.5
+shadow_enabled = true
+shadow_blur = 2.0
+
+[node name="RimLight" type="OmniLight3D" parent="." unique_id=661238904]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 8, -18)
+light_color = Color(0.431373, 0.541176, 0.682353, 1)
+light_energy = 0.6
+omni_range = 30.0

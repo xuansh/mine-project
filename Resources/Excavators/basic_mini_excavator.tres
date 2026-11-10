@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="MineableData" format=3 uid="uid://0tv44qslkr0d"]
+
+[ext_resource type="Script" uid="uid://oow0yxgldp0v" path="res://Datas/MineableEntity/mineable_data.gd" id="1_l6pb7"]
+
+[resource]
+script = ExtResource("1_l6pb7")
+speed = 10.035
+metadata/_custom_type_script = "uid://oow0yxgldp0v"

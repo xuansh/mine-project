@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "Ground Rock"
+albedo_color = Color(0.164706, 0.14902, 0.133333, 1)
+roughness = 0.95
+metallic = 0.0

@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://d3q0dk5rs83tc"]
+
+[ext_resource type="Script" uid="uid://dwohq3rlt2ini" path="res://Scenes/MineableEntity/mineable_entity.gd" id="1_tk63t"]
+[ext_resource type="Resource" uid="uid://0tv44qslkr0d" path="res://Resources/Excavators/basic_mini_excavator.tres" id="2_lne65"]
+[ext_resource type="Material" uid="uid://clhvw8fougcn4" path="res://Resources/evecavatirs_self_glow.tres" id="3_u2rpx"]
+[ext_resource type="ArrayMesh" uid="uid://d3qldlskmoxs4" path="res://Assets/Evcavator/basic_mini_excavator.obj" id="4_4x080"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3x14q"]
+size = Vector3(1, 1, 2.4541016)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tk63t"]
+emission_enabled = true
+emission = Color(0.46095413, 0.9999998, 0.35396272, 1)
+emission_energy_multiplier = 16.0
+emission_on_uv2 = true
+
+[sub_resource type="TorusMesh" id="TorusMesh_6le5l"]
+material = SubResource("StandardMaterial3D_tk63t")
+inner_radius = 1.0
+outer_radius = 0.8
+
+[node name="CharacterBody3D" type="CharacterBody3D" unique_id=1455790257]
+script = ExtResource("1_tk63t")
+mineable_data = ExtResource("2_lne65")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1692270565]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0.7445, 0)
+material_override = ExtResource("3_u2rpx")
+mesh = ExtResource("4_4x080")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1490191716]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.168645, -0.3203125)
+shape = SubResource("BoxShape3D_3x14q")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="." unique_id=1437347275]
+target_desired_distance = 0.1
+path_height_offset = 0.5
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=709298159]
+transform = Transform3D(1, 0, 0, 0, 0.11699951, 0, 0, 0, 1, 0, 0.64707994, 0)
+mesh = SubResource("TorusMesh_6le5l")

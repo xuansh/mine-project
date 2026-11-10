@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://clhvw8fougcn4"]
+
+[ext_resource type="Texture2D" uid="uid://c3lp0noyx5ji" path="res://Assets/Evcavator/excavator_palette.png" id="1_i1d3t"]
+
+[resource]
+albedo_texture = ExtResource("1_i1d3t")
+roughness = 0.36
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 16.0
+emission_operator = 1
