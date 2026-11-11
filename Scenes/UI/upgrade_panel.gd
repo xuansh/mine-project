@@ -1,7 +1,8 @@
 extends CanvasLayer
 
-## 升级面板（GDD 4.6 / 4.8）：全屏弹层，展示钻头 / 油箱 / 货舱 / 引擎四个改装方向。
-## 等级与扣款走 Autoload Game，面板只负责展示、校验点击与刷新。
+## 升级面板（GDD 4.6 / 4.8）：全屏弹层，节点树样式。
+## 中心「挖掘核心」向四向发散出钻头 / 货舱 / 引擎 / 油箱四个改装节点，
+## 点节点花金币购买，等级与扣款走 Autoload Game，面板只负责展示、校验点击与刷新。
 
 ## 升级定义列表。留空时自动加载默认的五份 .tres，改数值去 Resource 不改这里
 @export var definitions : Array[UpgradeDefinition] = []
@@ -20,9 +21,8 @@ const DEFAULT_DEFINITION_PATHS := [
 # ---- 色板（像素 HUD 风：深紫夜底 #0B0A12、面板 #181420、灰紫描边 #6E6884、唯一强调色工程黄 #D9A227）----
 const COLOR_MASK := Color("0b0a12")
 const COLOR_PANEL := Color("181420")
-const COLOR_CARD := Color("221d30")
-const COLOR_BORDER := Color("6e6884")
 const COLOR_FRAME_DARK := Color("221c30")
+const COLOR_BORDER := Color("6e6884")
 const COLOR_ACCENT := Color("D9A227")
 const COLOR_ACCENT_TEXT := Color("2A1E05")
 const COLOR_TEXT := Color("F0EEE4")
@@ -31,15 +31,13 @@ const COLOR_DISABLED_BG := Color("1b1726")
 const COLOR_DISABLED_TEXT := Color("6b667d")
 
 @onready var _panel : PanelContainer = $Dim/Center/Panel
-@onready var _cards_box : VBoxContainer = $Dim/Center/Panel/Margin/Body/Cards
+@onready var _tree_area : UpgradeTreeArea = $Dim/Center/Panel/Margin/Body/TreeArea
 @onready var _coin_value : Label = $Dim/Center/Panel/Margin/Body/Header/CoinRow/CoinValue
 @onready var _close_button : Button = $Dim/Center/Panel/Margin/Body/Header/CloseButton
 
 var _group_order : Array[StringName] = []
 ## StringName -> Array[UpgradeDefinition]（嵌套类型化集合 GDScript 不支持，这里用裸字典）
 var _group_defs : Dictionary = {}
-## group -> { level: Label, stats: Dictionary[stat_key, Label], button: Button }
-var _cards : Dictionary = {}
 
 
 func _ready() -> void:
@@ -47,7 +45,7 @@ func _ready() -> void:
 		_load_default_definitions()
 	_aggregate_definitions()
 	_apply_panel_style()
-	_build_cards()
+	_build_tree()
 
 	_close_button.pressed.connect(close_panel)
 	Game.coins_changed.connect(_on_coins_changed)
@@ -101,90 +99,12 @@ func _apply_panel_style() -> void:
 	_panel.add_theme_stylebox_override("panel", _make_box_style(COLOR_PANEL, COLOR_BORDER))
 
 
-func _build_cards() -> void:
+func _build_tree() -> void:
+	var titles := {}
 	for group in _group_order:
-		var defs : Array = _group_defs[group]
-		_cards_box.add_child(_make_card(group, defs))
-
-
-func _make_card(group : StringName, defs : Array) -> PanelContainer:
-	var primary : UpgradeDefinition = defs[0]
-
-	var card := PanelContainer.new()
-	card.add_theme_stylebox_override("panel", _make_box_style(COLOR_CARD, COLOR_BORDER))
-
-	var margin := MarginContainer.new()
-	for side in ["margin_left", "margin_top", "margin_right", "margin_bottom"]:
-		margin.add_theme_constant_override(side, 18)
-	card.add_child(margin)
-
-	var hbox := HBoxContainer.new()
-	hbox.add_theme_constant_override("separation", 20)
-	margin.add_child(hbox)
-
-	# 左侧：标题 / 等级 / 描述 / 数值行
-	var info := VBoxContainer.new()
-	info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	info.add_theme_constant_override("separation", 6)
-	hbox.add_child(info)
-
-	var title_row := HBoxContainer.new()
-	title_row.add_theme_constant_override("separation", 12)
-	info.add_child(title_row)
-
-	var title := Label.new()
-	title.text = primary.title
-	title.add_theme_font_size_override("font_size", 20)
-	title.add_theme_color_override("font_color", COLOR_TEXT)
-	title.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.7))
-	title.add_theme_constant_override("shadow_offset_x", 2)
-	title.add_theme_constant_override("shadow_offset_y", 2)
-	title_row.add_child(title)
-
-	var level := Label.new()
-	level.add_theme_font_size_override("font_size", 16)
-	level.add_theme_color_override("font_color", COLOR_ACCENT)
-	title_row.add_child(level)
-
-	var desc := Label.new()
-	desc.text = primary.description
-	desc.add_theme_font_size_override("font_size", 14)
-	desc.add_theme_color_override("font_color", COLOR_SUBTEXT)
-	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	info.add_child(desc)
-
-	var stats := VBoxContainer.new()
-	stats.add_theme_constant_override("separation", 4)
-	info.add_child(stats)
-
-	var stat_labels : Dictionary[StringName, Label] = {}
-	for def in defs:
-		var stat_label := Label.new()
-		stat_label.add_theme_font_size_override("font_size", 16)
-		stat_label.add_theme_color_override("font_color", COLOR_TEXT)
-		stats.add_child(stat_label)
-		stat_labels[def.stat_key] = stat_label
-
-	# 右侧：购买按钮
-	var button := Button.new()
-	button.custom_minimum_size = Vector2(180, 56)
-	button.add_theme_font_size_override("font_size", 18)
-	button.add_theme_color_override("font_color", COLOR_ACCENT_TEXT)
-	button.add_theme_color_override("font_disabled_color", COLOR_DISABLED_TEXT)
-	button.add_theme_color_override("font_shadow_color", Color(1, 1, 1, 0.18))
-	button.add_theme_constant_override("shadow_offset_x", 2)
-	button.add_theme_constant_override("shadow_offset_y", 2)
-	button.add_theme_stylebox_override("normal", _make_box_style(COLOR_ACCENT, COLOR_ACCENT))
-	button.add_theme_stylebox_override("disabled", _make_box_style(COLOR_DISABLED_BG, COLOR_BORDER))
-	button.pressed.connect(_on_buy_pressed.bind(group))
-	hbox.add_child(button)
-
-	_cards[group] = {
-		"level": level,
-		"stats": stat_labels,
-		"button": button,
-	}
-	return card
+		titles[group] = (_group_defs[group][0] as UpgradeDefinition).title
+	_tree_area.setup(titles)
+	_tree_area.buy_requested.connect(_on_buy_pressed)
 
 
 # ---------------------------------------------------------------- 数值与成本
@@ -226,31 +146,22 @@ func refresh_all() -> void:
 
 
 func _refresh_card(group : StringName) -> void:
-	if not _cards.has(group):
+	if not _group_defs.has(group):
 		return
 	var defs : Array = _group_defs[group]
-	var card : Dictionary = _cards[group]
 	var level := Game.get_group_level(group)
 
-	card["level"].text = "Lv.%d" % level
-
-	for def in defs:
-		var label : Label = card["stats"][def.stat_key]
-		var cur := _format_value(def, _value_of(def, level))
-		if _is_maxed(def, level):
-			label.text = "%s  ·  MAX" % cur
-		else:
-			var nxt := _format_value(def, _value_of(def, level + 1))
-			label.text = "%s  →  %s" % [cur, nxt]
-
-	var button : Button = card["button"]
+	var node_state : UpgradeGroupNode.State
+	var price_text : String
 	if _group_maxed(defs, level):
-		button.text = "已满级"
-		button.disabled = true
+		node_state = UpgradeGroupNode.State.MAXED
+		price_text = "已满级"
 	else:
 		var cost := _cost_of(defs[0] as UpgradeDefinition, level)
-		button.text = "%d 金币" % cost
-		button.disabled = Game.coins < cost
+		price_text = "%d 金币" % cost
+		node_state = UpgradeGroupNode.State.OK if Game.coins >= cost else UpgradeGroupNode.State.POOR
+
+	_tree_area.update_node(group, level, price_text, node_state)
 
 
 func _on_buy_pressed(group : StringName) -> void:

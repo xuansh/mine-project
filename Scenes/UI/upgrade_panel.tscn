@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://Scenes/UI/upgrade_panel.gd" id="1_panel"]
+[ext_resource type="Script" path="res://Scenes/UI/upgrade_tree_area.gd" id="2_tree"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_coin"]
 bg_color = Color(0.85098, 0.635294, 0.152941, 1)
@@ -63,7 +64,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="Panel" type="PanelContainer" parent="Dim/Center"]
-custom_minimum_size = Vector2(760, 640)
+custom_minimum_size = Vector2(760, 580)
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
 [node name="Margin" type="MarginContainer" parent="Dim/Center/Panel"]
@@ -75,7 +76,7 @@ theme_override_constants/margin_bottom = 24
 
 [node name="Body" type="VBoxContainer" parent="Dim/Center/Panel/Margin"]
 layout_mode = 2
-theme_override_constants/separation = 18
+theme_override_constants/separation = 14
 
 [node name="Header" type="HBoxContainer" parent="Dim/Center/Panel/Margin/Body"]
 layout_mode = 2
@@ -124,12 +125,14 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_close_normal")
 theme_override_styles/hover = SubResource("StyleBoxFlat_close_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_close_pressed")
 
+[node name="TreeArea" type="Control" parent="Dim/Center/Panel/Margin/Body"]
+custom_minimum_size = Vector2(700, 400)
+layout_mode = 2
+script = ExtResource("2_tree")
+
 [node name="Hint" type="Label" parent="Dim/Center/Panel/Margin/Body"]
 layout_mode = 2
-text = "用挖到矿石换来的金币改装机器，再往更深的矿区推进。"
+text = "点击节点花金币改装，改装会立刻生效。方向与技能树的四条流派一一对应。"
 theme_override_font_sizes/font_size = 14
 theme_override_colors/font_color = Color(0.627451, 0.596078, 0.709804, 1)
-
-[node name="Cards" type="VBoxContainer" parent="Dim/Center/Panel/Margin/Body"]
-layout_mode = 2
-theme_override_constants/separation = 14
+horizontal_alignment = 1
