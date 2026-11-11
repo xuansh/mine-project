@@ -196,7 +196,7 @@
 技能树是本作区别于同类挖掘游戏的**特色系统**，玩家成长的主要出口之一，必须长期保留并持续扩充，任何重构都不得移除或降级它。
 
 - **定位**：升级面板（4.6）解决"数值变强"，技能树解决"怎么变强"——用金币在树上解锁节点，把机器拼成不同流派（速度流 / 收益流 / 后续的续航流等）。两者互为补充：面板是"买数值"，技能树是"点天赋"。
-- **位置**：`Scenes/UI/SkillTree/skill_tree.tscn`，实例化在 `Scenes/MiningField/control.tscn` 的 `SubViewport` 内，与 `MineField` 平行；由 `CanvasLayer(layer = 10)` 绘制在矿区与金币 HUD 之上。
+- **位置**：`Scenes/UI/SkillTree/skill_tree.tscn`，实例化在 `Scenes/MiningField/control.tscn` 的 `SubViewport` 内，与 `MineField` 平行；由 `CanvasLayer(layer = 10)` 绘制在矿区画面之上。
 - **开关**：`U` 键切换，右上角 `×` 关闭（`Scenes/MiningField/control.gd` 统一处理输入）。
 - **结构**：由 `Resources/SkillTree/basic_skill_tree.tres` 数据驱动（`SkillTreeData` + `SkillNodeData`），节点支持方形 / 六边形两种形状，父子连线由 `SkillTree._draw()` 绘制。界面左侧预留「精通」「遗物」两个页签位，作为后续扩充入口。
 - **树状结构**（`◆` 六边形关键节点 / `□` 方形数值节点；对齐参考图的四向发散布局：左上钻头、右上经济、左下引擎、右下续航）：
@@ -252,11 +252,28 @@
 | 层级 | 内容 | 位置 |
 | --- | --- | --- |
 | 常驻 | 金币、掘进深度、油量条（分段）、货舱条 + 累计收益、导航目标 | **左侧状态栏**（参考复古太空像素 HUD：自上而下的面板列 + 左上角小标题牌） |
-| 常驻 | 功能按钮列（技 / 改 / 停）、「回地表」大按钮 | 左下角 / 右下角 |
+| 常驻 | 功能按钮列（技 / 改 / 停）、「回地表」大按钮 | 左栏底部 / 底部空白带右下角 |
+| 常驻 | 「矿报」小牌 | 3D 矿区右上角（参考图「舰报」位） |
 | 临场 | 挖掘进度环、掉落飘字 | 世界空间内跟随目标格 |
 | 低频 | 升级面板、结算面板 | 全屏弹层 |
 
 风格为像素 HUD 风（参考复古太空像素界面）：近黑紫底 `#0B0A12`、面板填充 `#181420`、灰紫描边 `#6E6884`（直角 + 2px 双层框，禁用圆角与软阴影），文字暖白 `#F0EEE4` 带硬投影，唯一强调色工程黄 `#D9A227`。像素字体资源到位前先用系统默认字体。
+
+#### 4.8.1 窗口结构与分辨率自适应
+
+主场景 `control.tscn` 的窗口分区（1920×1080 设计基准下的读法）：
+
+```
+┌────────┬───────────────────────────────┐
+│ 左侧栏  │                               │
+│ 373px  │   3D 矿区（SubViewport）        │
+│ （HUD） │   底部留出 278px 空白带         │
+└────────┴───────────────────────────────┘
+   ↑ 左栏 + 底部带 = 窗口级 HUD 的地盘
+```
+
+- **层级分工**：金币 / 深度 / 机体 / 货舱 / 导航面板与按钮列挂在**窗口级 `CanvasLayer`**（`HudLayer`），不随 3D 画布缩放；技能树与升级面板挂在 SubViewport 内的 `CanvasLayer(layer=10)`，随矿区画面一体。
+- **分辨率自适应（硬规定）**：`project.godot` 设设计基准 1920×1080 + `canvas_items` 拉伸 + `expand` 宽高比适配——任意窗口尺寸（含 1152×648）UI 整体等比缩放，不错位、不留黑边。**新增 UI 一律用锚点 / 容器布局，禁止写死像素偏移**；3D 视口容器用「锚满全屏 − 左 373 − 底 278」表达分区，不依赖具体窗口数。
 
 ---
 
@@ -353,11 +370,12 @@
 | --- | --- | --- | --- |
 | 矿区生成 | `Scenes/MiningField/mine_field.gd` | 铺满 `y=0` 一层、按 Z 轴撒发光标记 | 多层、按深度选矿、矿脉成簇 |
 | 挖掘行为 | `Scenes/MineableEntity/mineable_entity.gd` | 前进探测 + 停止后按攻击间隔反复攻击矿石、扣血到 0 清格；发 `ore_damaged / ore_mined / drop_gained` | 转向、硬岩判定、受击表现、粒子 |
-| 机器数据 | `Datas/MineableEntity/mineable_data.gd` | `total_fuel / fuelConsumptionPerSecond / speed / attack / attack_interval`；首台机 100 油 × 4.0/秒 ≈ 25 秒一局，耗尽 `queue_free` | 字段命名不统一（驼峰混用），缺 `cargo`；缺油条 HUD |
+| 机器数据 | `Datas/MineableEntity/mineable_data.gd` | `total_fuel / fuelConsumptionPerSecond / speed / attack / attack_interval`；首台机 100 油 × 4.0/秒 ≈ 25 秒一局，耗尽 `queue_free` | 字段命名不统一（驼峰混用），缺 `cargo` |
 | 矿物数据 | `Resources/Oredata/oredata.gd` | `ore_name / hp / drop / value`（单格金币 = `drop × value`）；`mine_field.gd` 用 `ore_datas` 数组按 item id 映射，留空时兜底煤 | 缺 `color / rarity`；目前只有 `coal_data.tres` 一个实例 |
 | 相机与点击 | `Scenes/Camera/camera_3d.gd` · `Scenes/MiningField/mine_field.gd` | 点击 → 射线打地面 → 吸附最近小球 → `excavator_scene` 实例化生成（同一时间一台） | 连点重摆、点击反馈、触摸端适配 |
 | 全局状态 | `Autoload/game.gd` | `coins` + `coins_changed(total, delta)` 信号 + `add_coins / spend_coins` | 缺存档、升级等级 |
-| 金币 HUD | `Scenes/UI/coin_hud.tscn` · `Scenes/UI/coin_hud.gd` | CanvasLayer 叠在左上角：金币圆点 + 数字（千分位），加钱时数字闪一下并淡回 | 图标是占位色块；缺"金币跳字"与音效 |
+| 金币 HUD | `Scenes/UI/coin_hud.tscn` · `Scenes/UI/coin_hud.gd` | 已并入游戏内 HUD 左栏金币牌（旧独立场景从 MineField 移除，文件保留备用）：金币色块 + 数字（千分位） | 图标是占位色块；缺"金币跳字"与音效 |
+| 游戏 HUD | `Scenes/MiningField/hud.tscn` · `hud.gd` · `Scenes/UI/hud_segment_bar.gd` | 挂 control 的窗口级 `HudLayer`：左栏状态面板列（金币 / 掘进深度 / 机体油量 / 货舱与收益 / 导航目标）+ 左下按钮列（技 / 改 / 停）+ 右下「回地表」占位；分段条纯自绘无贴图；数据走 `excavator_spawned` / `Game.coins_changed`；深度暂用推进距离表达 | 「回地表」系统、货舱字段接入实体、导航目标数据、金币跳字 |
 | 升级树界面 | `Scenes/UI/SkillTree/` · `Resources/SkillTree/` | 挂在 `control.tscn` 的 SubViewport 里与 MineField 平行；`U` / `×` 切换；数据驱动四向 14 节点（钻头 / 引擎 / 经济 / 续航四条线），可选中查看详情 | 解锁扣费、实际数值生效、精通与遗物页签 |
 | 数值配置 | `Resources/Excavators/*.tres` | 只有 `speed = 10.035` | 其余字段为空，需要补齐初始值 |
 
