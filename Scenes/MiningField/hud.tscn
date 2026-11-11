@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://c8b7vwfbmgnta" path="res://Scenes/MiningField/hud.gd" id="1_hud"]
 [ext_resource type="Script" uid="uid://cpoopa1cul2t" path="res://Scenes/UI/hud_segment_bar.gd" id="2_bar"]
 [ext_resource type="FontFile" uid="uid://dc53gr162sfom" path="res://Assets/Fonts/ChangBanDianSong-16-SC.ttf" id="2_q3om7"]
+[ext_resource type="PackedScene" uid="uid://db0q7iq02fd3h" path="res://Scenes/Planets/earth.tscn" id="3_2pg1r"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 content_margin_left = 10.0
@@ -152,7 +153,7 @@ layout_mode = 0
 offset_left = 24.0
 offset_top = 256.0
 offset_right = 330.0
-offset_bottom = 448.0
+offset_bottom = 487.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
@@ -164,7 +165,19 @@ theme_override_constants/separation = 6
 layout_mode = 2
 text = "你好"
 
+[node name="SubViewportContainer" type="SubViewportContainer" parent="CoinPanel/Body" unique_id=1031205190]
+layout_mode = 2
+
+[node name="SubViewport" type="SubViewport" parent="CoinPanel/Body/SubViewportContainer" unique_id=1689887661]
+own_world_3d = true
+handle_input_locally = false
+size = Vector2i(285, 184)
+render_target_update_mode = 4
+
+[node name="Earth" parent="CoinPanel/Body/SubViewportContainer/SubViewport" unique_id=264228363 instance=ExtResource("3_2pg1r")]
+
 [node name="CargoPanel" type="PanelContainer" parent="." unique_id=296472767]
+visible = false
 layout_mode = 0
 offset_left = 24.0
 offset_top = 464.0
@@ -215,6 +228,7 @@ theme_override_font_sizes/font_size = 13
 text = "累计收益 0"
 
 [node name="NavPanel" type="PanelContainer" parent="." unique_id=1499772004]
+visible = false
 layout_mode = 0
 offset_left = 24.0
 offset_top = 640.0

@@ -28,26 +28,21 @@ window/size/window_height_override=648
 window/hdr/request_hdr_output=true
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+window/stretch/scale_mode="integer"
 
 [file_customization]
 
 folder_colors={
-"res://Assets/Fonts/": "red"
+"res://Assets/Fonts/": "red",
+"res://Assets/Planets/": "teal",
+"res://Scenes/MiningField/": "red"
 }
 
 [gui]
 
-; 像素字体渲染：关抗锯齿 / hinting / 亚像素定位，否则字形边缘会闪
 theme/default_font_antialiasing=0
 theme/default_font_hinting=0
 theme/default_font_subpixel_positioning=0
-theme/default_font_generate_mipmaps=false
-
-[rendering]
-
-; UI 落在半像素上会闪（非整数倍缩放时）：统一吸附到整数像素
-2d/snap/snap_2d_transforms_to_pixel=true
-2d/snap/snap_2d_vertices_to_pixel=true
 
 [input]
 
@@ -92,3 +87,5 @@ lights_and_shadows/directional_shadow/soft_shadow_filter_quality.mobile=5
 lights_and_shadows/positional_shadow/soft_shadow_filter_quality=5
 lights_and_shadows/positional_shadow/soft_shadow_filter_quality.mobile=5
 viewport/hdr_2d=true
+2d/snap/snap_2d_transforms_to_pixel=true
+2d/snap/snap_2d_vertices_to_pixel=true
