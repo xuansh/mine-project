@@ -7,37 +7,186 @@
 script = ExtResource("1_jj00i")
 id = &"root"
 title = "挖掘核心"
-description = "整棵改装树的起点。动力、液压与电控都从这颗核心分配出去。"
+description = "整棵改装树的起点。动力、液压与电控都从这颗核心分配出去，向四个方向延伸出四条改装流派。"
 effect_key = &"core"
 accent_color = Color(0.9098039, 0.76862746, 0.41568628, 1)
 shape = 1
-position = Vector2(0, -104)
-children = Array[StringName]([&"excavator_speed", &"ore_value"])
+position = Vector2(0, 0)
+children = Array[StringName]([&"drill_attack", &"excavator_speed", &"ore_value", &"fuel_tank"])
+
+[sub_resource type="Resource" id="Resource_drill_attack"]
+script = ExtResource("1_jj00i")
+id = &"drill_attack"
+title = "合金钻头"
+description = "换装高硬度合金钻齿，每一下都啃得更深。"
+effect_key = &"attack"
+effect_value = 0.15
+cost = 80
+accent_color = Color(0.8509804, 0.6352941, 0.1529412, 1)
+shape = 0
+position = Vector2(-150, -100)
+children = Array[StringName]([&"drill_frequency", &"deep_drill"])
+
+[sub_resource type="Resource" id="Resource_drill_frequency"]
+script = ExtResource("1_jj00i")
+id = &"drill_frequency"
+title = "高频钻机"
+description = "提高钻头的冲击频率，同一格矿更快挖穿。"
+effect_key = &"attack_interval"
+effect_value = 0.15
+cost = 200
+accent_color = Color(0.8509804, 0.6352941, 0.1529412, 1)
+shape = 0
+position = Vector2(-260, -170)
+children = Array[StringName]([&"breaker"])
+
+[sub_resource type="Resource" id="Resource_breaker"]
+script = ExtResource("1_jj00i")
+id = &"breaker"
+title = "破碎者"
+description = "重型破岩钻头。硬度不再能挡住这台机器——解锁硬岩开采，永远不会再被硬岩卡死。"
+effect_key = &"hard_ore_unlock"
+effect_value = 1.0
+cost = 480
+accent_color = Color(0.9607843, 0.7411765, 0.254902, 1)
+shape = 1
+position = Vector2(-370, -240)
+
+[sub_resource type="Resource" id="Resource_deep_drill"]
+script = ExtResource("1_jj00i")
+id = &"deep_drill"
+title = "深孔钻"
+description = "专攻高耐久矿层：铁矿、铜矿这类硬骨头，打起来更顺手。"
+effect_key = &"tough_ore_damage"
+effect_value = 0.2
+cost = 120
+accent_color = Color(0.8509804, 0.6352941, 0.1529412, 1)
+shape = 0
+position = Vector2(-140, -220)
 
 [sub_resource type="Resource" id="Resource_7xnfn"]
 script = ExtResource("1_jj00i")
 id = &"excavator_speed"
 title = "涡轮引擎"
-description = "改装引擎与传动，让挖掘机在矿道里移动得更快。
-具体数值等升级系统接入后再生效。"
+description = "改装引擎与传动，让挖掘机在矿道里移动得更快。"
 effect_key = &"excavator_speed"
 effect_value = 0.1
 cost = 120
 accent_color = Color(0.24705882, 0.7490196, 0.627451, 1)
-position = Vector2(-182, 78)
+shape = 0
+position = Vector2(-160, 100)
+children = Array[StringName]([&"gearbox", &"hydraulic_turn", &"inertia_weight"])
+
+[sub_resource type="Resource" id="Resource_gearbox"]
+script = ExtResource("1_jj00i")
+id = &"gearbox"
+title = "二级变速箱"
+description = "再榨一段扭矩出来，矿道里的移动速度进一步提升。"
+effect_key = &"excavator_speed"
+effect_value = 0.15
+cost = 260
+accent_color = Color(0.24705882, 0.7490196, 0.627451, 1)
+shape = 0
+position = Vector2(-280, 170)
+
+[sub_resource type="Resource" id="Resource_hydraulic_turn"]
+script = ExtResource("1_jj00i")
+id = &"hydraulic_turn"
+title = "液压转向"
+description = "转向机构换装高压液压泵，掉头耗时明显缩短。"
+effect_key = &"turn_speed"
+effect_value = 0.4
+cost = 220
+accent_color = Color(0.24705882, 0.7490196, 0.627451, 1)
+shape = 0
+position = Vector2(-300, 40)
+
+[sub_resource type="Resource" id="Resource_inertia_weight"]
+script = ExtResource("1_jj00i")
+id = &"inertia_weight"
+title = "惯性配重"
+description = "车身加装配重块：挖掘时的反冲不再拖慢推进节奏。"
+effect_key = &"no_slow_dig"
+effect_value = 1.0
+cost = 180
+accent_color = Color(0.24705882, 0.7490196, 0.627451, 1)
+shape = 0
+position = Vector2(-160, 220)
 
 [sub_resource type="Resource" id="Resource_b3q5w"]
 script = ExtResource("1_jj00i")
 id = &"ore_value"
 title = "矿石精炼"
-description = "装舱前先做一次粗炼，同一块矿石可以卖出更高的价格。
-具体数值等升级系统接入后再生效。"
+description = "装舱前先做一次粗炼，同一块矿石可以卖出更高的价格。"
 effect_key = &"ore_value"
 effect_value = 0.1
 cost = 160
 accent_color = Color(0.8784314, 0.58431375, 0.24705882, 1)
-position = Vector2(182, 78)
+shape = 0
+position = Vector2(160, -100)
+children = Array[StringName]([&"refine_furnace", &"cargo_bay"])
+
+[sub_resource type="Resource" id="Resource_refine_furnace"]
+script = ExtResource("1_jj00i")
+id = &"refine_furnace"
+title = "精选熔炉"
+description = "车载小型熔炉，稀有矿出坑前完成一次精选提纯，单价翻倍。"
+effect_key = &"rare_value"
+effect_value = 1.0
+cost = 500
+accent_color = Color(0.9686275, 0.6784314, 0.3294118, 1)
+shape = 1
+position = Vector2(280, -180)
+
+[sub_resource type="Resource" id="Resource_cargo_bay"]
+script = ExtResource("1_jj00i")
+id = &"cargo_bay"
+title = "扩容货舱"
+description = "货舱加高一圈，一趟下去能多装 10 单位矿。"
+effect_key = &"cargo_max"
+effect_value = 10.0
+cost = 240
+accent_color = Color(0.8784314, 0.58431375, 0.24705882, 1)
+shape = 0
+position = Vector2(160, -220)
+
+[sub_resource type="Resource" id="Resource_fuel_tank"]
+script = ExtResource("1_jj00i")
+id = &"fuel_tank"
+title = "加大油箱"
+description = "底盘挂一组附加油箱，单局续航直接拉长。"
+effect_key = &"fuel_max"
+effect_value = 40.0
+cost = 100
+accent_color = Color(0.3529412, 0.5607843, 0.8156863, 1)
+shape = 0
+position = Vector2(150, 100)
+children = Array[StringName]([&"dual_fuel_line", &"idle_low"])
+
+[sub_resource type="Resource" id="Resource_dual_fuel_line"]
+script = ExtResource("1_jj00i")
+id = &"dual_fuel_line"
+title = "双油路"
+description = "主副双油路交替供油，整体燃油消耗显著下降。"
+effect_key = &"fuel_burn"
+effect_value = 0.15
+cost = 280
+accent_color = Color(0.3529412, 0.5607843, 0.8156863, 1)
+shape = 0
+position = Vector2(280, 40)
+
+[sub_resource type="Resource" id="Resource_idle_low"]
+script = ExtResource("1_jj00i")
+id = &"idle_low"
+title = "低怠速系统"
+description = "钻头空转时自动降怠速：原地开挖的油耗更省。"
+effect_key = &"idle_burn"
+effect_value = 0.25
+cost = 200
+accent_color = Color(0.3529412, 0.5607843, 0.8156863, 1)
+shape = 0
+position = Vector2(160, 220)
 
 [resource]
 script = ExtResource("2_lqyal")
-nodes = Array[ExtResource("1_jj00i")]([SubResource("Resource_l5kd4"), SubResource("Resource_7xnfn"), SubResource("Resource_b3q5w")])
+nodes = Array[ExtResource("1_jj00i")]([SubResource("Resource_l5kd4"), SubResource("Resource_drill_attack"), SubResource("Resource_drill_frequency"), SubResource("Resource_breaker"), SubResource("Resource_deep_drill"), SubResource("Resource_7xnfn"), SubResource("Resource_gearbox"), SubResource("Resource_hydraulic_turn"), SubResource("Resource_inertia_weight"), SubResource("Resource_b3q5w"), SubResource("Resource_refine_furnace"), SubResource("Resource_cargo_bay"), SubResource("Resource_fuel_tank"), SubResource("Resource_dual_fuel_line"), SubResource("Resource_idle_low")])

@@ -40,5 +40,27 @@ func get_effect_text() -> String:
 			return "矿石价值 +%d%%" % roundi(effect_value * 100.0)
 		&"core":
 			return "解锁后续改装分支"
+		&"attack":
+			return "单次伤害 +%d%%" % roundi(effect_value * 100.0)
+		&"attack_interval":
+			return "攻击间隔 −%d%%" % roundi(effect_value * 100.0)
+		&"hard_ore_unlock":
+			return "解锁硬岩开采，不再被硬岩卡死"
+		&"tough_ore_damage":
+			return "高耐久矿伤害 +%d%%" % roundi(effect_value * 100.0)
+		&"turn_speed":
+			return "转向耗时 −%d%%" % roundi(effect_value * 100.0)
+		&"no_slow_dig":
+			return "挖掘期间不再减速"
+		&"rare_value":
+			return "稀有矿价值 +%d%%" % roundi(effect_value * 100.0)
+		&"cargo_max":
+			return "货舱容量 +%d" % roundi(effect_value)
+		&"fuel_max":
+			return "油箱容量 +%d" % roundi(effect_value)
+		&"fuel_burn":
+			return "燃油消耗 −%d%%" % roundi(effect_value * 100.0)
+		&"idle_burn":
+			return "原地开挖油耗 −%d%%" % roundi(effect_value * 100.0)
 		_:
 			return "暂无效果说明"
