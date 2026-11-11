@@ -136,12 +136,12 @@
 | 规则 | 数值（首版） |
 | --- | --- |
 | 油箱容量 | 100 |
-| 行驶油耗 | 1.0 / 秒 |
-| 挖掘油耗 | 2.0 / 秒（挖掘时替代行驶油耗，不叠加） |
-| 满油可挖格数 | 约 33 格（纯挖掘） |
-| 燃油耗尽 | 机器停在原地，本局结束，**已装舱的矿石保留**（不做惩罚性清零） |
+| 油耗 | **4.0 / 秒固定**（前进、挖掘、原地不动都一样） |
+| 一局时长 | 约 **25 秒**（100 ÷ 4.0），落在 20–30 秒目标区间 |
+| 燃油耗尽 | 机器直接 `queue_free` 消失（**临时表现**），已入账金币保留 |
+| 油量事件 | `fuel_changed(current, max)` 给 HUD 油条；`fuel_empty` 给后续结算/失败流程 |
 
-> 设计意图：不惩罚失败，只惩罚"贪心"。耗尽只是提前结束本局，玩家仍能带着收获回地表，下一局升级后再来。
+> 设计意图：不惩罚失败，只惩罚"贪心"。⚠ 目前"耗尽 → 消失"只是占位，等回地表/结算系统做好后，应替换成"停在原地 + 结算"。
 
 ### 4.4 矿物与掉落
 
@@ -229,8 +229,10 @@
 ```
 命中次数    hits       = ceil(ore.hp / excavator.attack)
 挖掘耗时    dig_time   = (hits - 1) × attack_interval
-单格油耗    fuel_cost  = dig_time × 2.0
-单格收益    income     = ore.drop
+每秒油耗    burn_rate  = excavator.fuelConsumptionPerSecond
+单局时长    run_time   = fuel_max / burn_rate
+单格油耗    fuel_cost  = dig_time × burn_rate
+单格收益    income     = ore.drop × ore.value
 升级成本    cost(n)    = base_cost × 1.55^n
 ```
 
@@ -242,6 +244,8 @@
 | `attack_interval`（攻击间隔） | 0.8 秒 | 0.3 秒 |
 | 等效 `power` | 10 / 秒（= 8 / 0.8） | 120 |
 | `fuel_max` | 100 | 400 |
+| `fuelConsumptionPerSecond` | 4.0 / 秒 | — |
+| 初始一局时长 | 约 25 秒 | — |
 | `cargo_max` | 20 | 200 |
 | `speed` | 10 单位/秒（沿用现有资源） | 25 |
 | `probe_distance` | 1.8（沿用现有值） | — |
@@ -311,7 +315,7 @@
 | --- | --- | --- | --- |
 | 矿区生成 | `Scenes/MiningField/mine_field.gd` | 铺满 `y=0` 一层、按 Z 轴撒发光标记 | 多层、按深度选矿、矿脉成簇 |
 | 挖掘行为 | `Scenes/MineableEntity/mineable_entity.gd` | 前进探测 + 停止后按攻击间隔反复攻击矿石、扣血到 0 清格；发 `ore_damaged / ore_mined / drop_gained` | 转向、硬岩判定、受击表现、粒子 |
-| 机器数据 | `Datas/MineableEntity/mineable_data.gd` | `total_fuel / fuelConsumptionPerSecond / speed / attack / attack_interval` | 字段命名不统一（驼峰混用），缺 `cargo`；`total_fuel` 在 `.tres` 里未赋值 |
+| 机器数据 | `Datas/MineableEntity/mineable_data.gd` | `total_fuel / fuelConsumptionPerSecond / speed / attack / attack_interval`；首台机 100 油 × 4.0/秒 ≈ 25 秒一局，耗尽 `queue_free` | 字段命名不统一（驼峰混用），缺 `cargo`；缺油条 HUD |
 | 矿物数据 | `Resources/Oredata/oredata.gd` | `ore_name / hp / drop / value`（单格金币 = `drop × value`）；`mine_field.gd` 用 `ore_datas` 数组按 item id 映射，留空时兜底煤 | 缺 `color / rarity`；目前只有 `coal_data.tres` 一个实例 |
 | 相机与点击 | `Scenes/Camera/camera_3d.gd` · `Scenes/MiningField/mine_field.gd` | 点击 → 射线打地面 → 吸附最近小球 → `excavator_scene` 实例化生成（同一时间一台） | 连点重摆、点击反馈、触摸端适配 |
 | 全局状态 | `Autoload/game.gd` | `coins` + `coins_changed(total, delta)` 信号 + `add_coins / spend_coins` | 缺存档、升级等级 |
@@ -368,4 +372,5 @@
 | 2026-11-11 | v0.2 | 挖掘改为"按 `attack_interval` 攻击矿石、扣 `Oredata.hp` 到 0 才清格"，挖完打印/发出掉落价值；新增 `attack` / `attack_interval` 数值与矿表掉落价值列 | — |
 | 2026-11-11 | v0.3 | 落地金币系统：`Oredata.value`（单格金币 = `drop × value`）、`Game.coins` + `coins_changed` 信号、左上角金币 HUD | — |
 | 2026-11-11 | v0.3 | 挖掘机改为点击生成：点击右侧发光小球附近 → 吸附最近小球 → 在该点实例化挖掘机并自动朝矿区推进；场景内预置挖掘机移除 | — |
+| 2026-11-11 | v0.4 | 燃油系统实装：固定 4.0/秒耗油、首台 100 油 ≈ 25 秒一局；`fuel_changed / fuel_empty` 信号，耗尽 `queue_free` 消失（占位表现） | — |
 | 2026-11-11 | v0.4 | 新增 2D 升级树界面框架：位于 SubViewport 内与 MineField 平行，`U` / `×` 切换；数据驱动「挖掘核心 → 涡轮引擎 / 矿石精炼」；升级扣费与效果尚未接入 | — |

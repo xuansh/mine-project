@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://olkeadrk0r0m" path="res://Scenes/MiningField/MineField.tscn" id="1_mine"]
 [ext_resource type="Script" uid="uid://croqj3v6s4o6a" path="res://Scenes/MiningField/control.gd" id="2_control"]
-[ext_resource type="PackedScene" path="res://Scenes/UI/SkillTree/skill_tree.tscn" id="3_skilltree"]
+[ext_resource type="PackedScene" uid="uid://bfbxkd3jjwl27" path="res://Scenes/UI/SkillTree/skill_tree.tscn" id="3_skilltree"]
 
 [node name="Control" type="Control" unique_id=1851587370]
 layout_mode = 3

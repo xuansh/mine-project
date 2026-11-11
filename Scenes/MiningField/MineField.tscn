@@ -4,8 +4,8 @@
 [ext_resource type="Environment" uid="uid://di8yeo0ht4ldw" path="res://Assets/Environments/mine_soft.tres" id="1_34eps"]
 [ext_resource type="Script" uid="uid://ckncg6l32af8o" path="res://Scenes/Camera/camera_3d.gd" id="2_6lt4f"]
 [ext_resource type="MeshLibrary" uid="uid://2mel1vqw41eu" path="res://Resources/ore_map.meshlib" id="3_s31g4"]
-[ext_resource type="Material" uid="uid://b0yqcvkri2v3k" path="res://Resources/Materials/ground_rock.tres" id="10_ground"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/coin_hud.tscn" id="7_hud"]
+[ext_resource type="Material" uid="uid://b0yqcvkri2v3k" path="res://Resources/Materials/ground_rock.tres" id="10_ground"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_6le5l"]
 vertices = PackedVector3Array(-24.5, 1, -26.84082, -24.5, 1, 24.40918, 28.75, 0.75, 24.40918, 28.75, 0.75, -26.84082)
@@ -70,4 +70,4 @@ light_color = Color(0.431373, 0.541176, 0.682353, 1)
 light_energy = 0.6
 omni_range = 30.0
 
-[node name="CoinHUD" parent="." instance=ExtResource("7_hud")]
+[node name="CoinHUD" parent="." unique_id=1958775257 instance=ExtResource("7_hud")]
