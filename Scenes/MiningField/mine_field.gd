@@ -29,6 +29,9 @@ const RAY_LENGTH : float = 2000.0
 ## 所有可吸附的落脚点（每个小球一个），来自 _ready 里生成的小球
 var _spawn_points : Array[Vector3] = []
 
+## 挖掘机生成时广播，HUD 靠它接油量/掉落信号
+signal excavator_spawned(excavator : MineableEntity)
+
 ## 已经生成的挖掘机，同一时间只保留一台
 var _excavator : MineableEntity
 
@@ -133,6 +136,7 @@ func _spawn_excavator(spawn_position : Vector3) -> void:
 	excavator.ore_datas = ore_datas
 
 	_excavator = excavator
+	excavator_spawned.emit(excavator)
 	print("[生成] 挖掘机出现在 (%.2f, %.2f, %.2f)" % [spawn_position.x, spawn_position.y, spawn_position.z])
 
 # ---------------------------------------------------------------- 工具

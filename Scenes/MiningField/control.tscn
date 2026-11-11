@@ -2,15 +2,8 @@
 
 [ext_resource type="PackedScene" uid="uid://olkeadrk0r0m" path="res://Scenes/MiningField/MineField.tscn" id="1_mine"]
 [ext_resource type="Script" uid="uid://croqj3v6s4o6a" path="res://Scenes/MiningField/control.gd" id="2_control"]
-[ext_resource type="Shader" path="res://Shaders/ps1_post_process.gdshader" id="2_p2tch"]
 [ext_resource type="PackedScene" uid="uid://bfbxkd3jjwl27" path="res://Scenes/UI/SkillTree/skill_tree.tscn" id="3_skilltree"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ig4mo"]
-shader = ExtResource("2_p2tch")
-shader_parameter/color_levels = 10
-shader_parameter/dither_strength = 0.45
-shader_parameter/pixel_size = 1.0
-shader_parameter/saturation = 0.85
+[ext_resource type="PackedScene" path="res://Scenes/MiningField/hud.tscn" id="4_hud"]
 
 [node name="Control" type="Control" unique_id=1851587370]
 layout_mode = 3
@@ -24,7 +17,6 @@ mouse_filter = 2
 script = ExtResource("2_control")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=792646217]
-material = SubResource("ShaderMaterial_ig4mo")
 layout_mode = 1
 anchors_preset = -1
 anchor_left = -2.2233336
@@ -38,9 +30,7 @@ offset_bottom = -1.9000244
 grow_horizontal = 0
 pivot_offset = Vector2(1547, 0)
 mouse_filter = 0
-texture_filter = 1
 stretch = true
-stretch_shrink = 2
 metadata/_edit_use_anchors_ = true
 
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=1638413875]
@@ -50,6 +40,11 @@ size = Vector2i(1547, 802)
 render_target_update_mode = 4
 
 [node name="Node3D" parent="SubViewportContainer/SubViewport" unique_id=1873184113 instance=ExtResource("1_mine")]
+
+[node name="HudLayer" type="CanvasLayer" parent="SubViewportContainer/SubViewport" unique_id=479737757]
+layer = 5
+
+[node name="Hud" parent="SubViewportContainer/SubViewport/HudLayer" instance=ExtResource("4_hud")]
 
 [node name="SkillTreeLayer" type="CanvasLayer" parent="SubViewportContainer/SubViewport" unique_id=479737756]
 layer = 10

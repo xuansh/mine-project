@@ -4,7 +4,6 @@
 [ext_resource type="Environment" uid="uid://di8yeo0ht4ldw" path="res://Assets/Environments/mine_soft.tres" id="1_34eps"]
 [ext_resource type="Script" uid="uid://ckncg6l32af8o" path="res://Scenes/Camera/camera_3d.gd" id="2_6lt4f"]
 [ext_resource type="MeshLibrary" uid="uid://2mel1vqw41eu" path="res://Resources/ore_map.meshlib" id="3_s31g4"]
-[ext_resource type="PackedScene" path="res://Scenes/UI/coin_hud.tscn" id="7_hud"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/upgrade_panel.tscn" id="8_up"]
 [ext_resource type="Material" uid="uid://b0yqcvkri2v3k" path="res://Resources/Materials/ground_rock.tres" id="10_ground"]
 
@@ -56,6 +55,7 @@ mesh = SubResource("BoxMesh_6le5l")
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1904077215]
 transform = Transform3D(0.7071068, -0.3535534, 0.6123724, 0, 0.8660254, 0.5, -0.7071068, -0.3535534, 0.6123724, 42.87, 35.5, 41.67)
 projection = 1
+current = true
 size = 40.0
 script = ExtResource("2_6lt4f")
 
@@ -72,6 +72,4 @@ light_color = Color(0.431373, 0.407843, 0.62, 1)
 light_energy = 0.8
 omni_range = 30.0
 
-[node name="CoinHUD" parent="." unique_id=1958775257 instance=ExtResource("7_hud")]
-
-[node name="UpgradePanel" parent="." instance=ExtResource("8_up")]
+[node name="UpgradePanel" parent="." unique_id=621329086 instance=ExtResource("8_up")]

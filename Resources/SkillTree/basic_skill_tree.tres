@@ -11,7 +11,6 @@ description = "整棵改装树的起点。动力、液压与电控都从这颗�
 effect_key = &"core"
 accent_color = Color(0.9098039, 0.76862746, 0.41568628, 1)
 shape = 1
-position = Vector2(0, 0)
 children = Array[StringName]([&"drill_attack", &"excavator_speed", &"ore_value", &"fuel_tank"])
 
 [sub_resource type="Resource" id="Resource_drill_attack"]
@@ -23,7 +22,6 @@ effect_key = &"attack"
 effect_value = 0.15
 cost = 80
 accent_color = Color(0.8509804, 0.6352941, 0.1529412, 1)
-shape = 0
 position = Vector2(-150, -100)
 children = Array[StringName]([&"drill_frequency", &"deep_drill"])
 
@@ -36,7 +34,6 @@ effect_key = &"attack_interval"
 effect_value = 0.15
 cost = 200
 accent_color = Color(0.8509804, 0.6352941, 0.1529412, 1)
-shape = 0
 position = Vector2(-260, -170)
 children = Array[StringName]([&"breaker"])
 
@@ -61,7 +58,6 @@ effect_key = &"tough_ore_damage"
 effect_value = 0.2
 cost = 120
 accent_color = Color(0.8509804, 0.6352941, 0.1529412, 1)
-shape = 0
 position = Vector2(-140, -220)
 
 [sub_resource type="Resource" id="Resource_7xnfn"]
@@ -73,7 +69,6 @@ effect_key = &"excavator_speed"
 effect_value = 0.1
 cost = 120
 accent_color = Color(0.24705882, 0.7490196, 0.627451, 1)
-shape = 0
 position = Vector2(-160, 100)
 children = Array[StringName]([&"gearbox", &"hydraulic_turn", &"inertia_weight"])
 
@@ -86,7 +81,6 @@ effect_key = &"excavator_speed"
 effect_value = 0.15
 cost = 260
 accent_color = Color(0.24705882, 0.7490196, 0.627451, 1)
-shape = 0
 position = Vector2(-280, 170)
 
 [sub_resource type="Resource" id="Resource_hydraulic_turn"]
@@ -98,7 +92,6 @@ effect_key = &"turn_speed"
 effect_value = 0.4
 cost = 220
 accent_color = Color(0.24705882, 0.7490196, 0.627451, 1)
-shape = 0
 position = Vector2(-300, 40)
 
 [sub_resource type="Resource" id="Resource_inertia_weight"]
@@ -110,7 +103,6 @@ effect_key = &"no_slow_dig"
 effect_value = 1.0
 cost = 180
 accent_color = Color(0.24705882, 0.7490196, 0.627451, 1)
-shape = 0
 position = Vector2(-160, 220)
 
 [sub_resource type="Resource" id="Resource_b3q5w"]
@@ -122,7 +114,6 @@ effect_key = &"ore_value"
 effect_value = 0.1
 cost = 160
 accent_color = Color(0.8784314, 0.58431375, 0.24705882, 1)
-shape = 0
 position = Vector2(160, -100)
 children = Array[StringName]([&"refine_furnace", &"cargo_bay"])
 
@@ -147,7 +138,6 @@ effect_key = &"cargo_max"
 effect_value = 10.0
 cost = 240
 accent_color = Color(0.8784314, 0.58431375, 0.24705882, 1)
-shape = 0
 position = Vector2(160, -220)
 
 [sub_resource type="Resource" id="Resource_fuel_tank"]
@@ -159,7 +149,6 @@ effect_key = &"fuel_max"
 effect_value = 40.0
 cost = 100
 accent_color = Color(0.3529412, 0.5607843, 0.8156863, 1)
-shape = 0
 position = Vector2(150, 100)
 children = Array[StringName]([&"dual_fuel_line", &"idle_low"])
 
@@ -172,7 +161,6 @@ effect_key = &"fuel_burn"
 effect_value = 0.15
 cost = 280
 accent_color = Color(0.3529412, 0.5607843, 0.8156863, 1)
-shape = 0
 position = Vector2(280, 40)
 
 [sub_resource type="Resource" id="Resource_idle_low"]
@@ -184,7 +172,6 @@ effect_key = &"idle_burn"
 effect_value = 0.25
 cost = 200
 accent_color = Color(0.3529412, 0.5607843, 0.8156863, 1)
-shape = 0
 position = Vector2(160, 220)
 
 [resource]

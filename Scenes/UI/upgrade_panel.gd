@@ -1,3 +1,4 @@
+class_name UpgradePanel
 extends CanvasLayer
 
 ## 升级面板（GDD 4.6 / 4.8）：全屏弹层，节点树样式。

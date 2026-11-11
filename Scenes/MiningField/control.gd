@@ -1,13 +1,17 @@
 extends Control
 
-## Control.tscn 的根节点：负责在「矿区」和「升级树」之间切换。
-## 两块内容都放在同一个 SubViewport 里，升级树是 MineField 的兄弟节点。
+## Control.tscn 的根节点：负责在「矿区」「HUD」「升级树」「升级面板」之间协调。
+## 矿区、HUD、升级树都放在同一个 SubViewport 里；HUD 是 layer=5 的 CanvasLayer，
+## 升级树是 layer=10 的 CanvasLayer，两者都是 MineField 的兄弟节点。
 
 @onready var _skill_tree : SkillTree = $SubViewportContainer/SubViewport/SkillTreeLayer/SkillTree
+@onready var _hud : Hud = $SubViewportContainer/SubViewport/HudLayer/Hud
+@onready var _upgrade_panel : UpgradePanel = $SubViewportContainer/SubViewport/Node3D/UpgradePanel
 
 func _ready() -> void:
 	_skill_tree.close_requested.connect(_on_skill_tree_close_requested)
 	_skill_tree.visible = false
+	_hud.action_requested.connect(_on_hud_action_requested)
 
 func _unhandled_input(event : InputEvent) -> void:
 	if event.is_action_pressed("Toggle-SkillTree"):
@@ -28,3 +32,13 @@ func _close_skill_tree() -> void:
 
 func _on_skill_tree_close_requested() -> void:
 	_close_skill_tree()
+
+## HUD 左下按钮列的动作分发
+func _on_hud_action_requested(id : StringName) -> void:
+	match id:
+		&"skill_tree":
+			_toggle_skill_tree()
+		&"upgrade":
+			_upgrade_panel.toggle_panel()
+		_:
+			pass

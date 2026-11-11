@@ -64,6 +64,10 @@ func _ready() -> void:
 
 	fuel_changed.emit(_fuel, _fuel_max)
 
+## HUD 等外部 UI 初始化时读油量状态（x = 当前油量，y = 油箱容量）
+func get_fuel_state() -> Vector2:
+	return Vector2(_fuel, _fuel_max)
+
 func _physics_process(delta : float) -> void:
 	if _is_dead:
 		return
