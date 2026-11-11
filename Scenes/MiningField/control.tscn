@@ -7,31 +7,26 @@
 
 [node name="Control" type="Control" unique_id=1851587370]
 layout_mode = 3
-anchors_preset = 1
-anchor_left = 1.0
+anchors_preset = 15
 anchor_right = 1.0
-offset_left = -480.0
-offset_bottom = 270.0
-grow_horizontal = 0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("2_control")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=792646217]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = -2.2233336
-anchor_top = 0.0074074073
-anchor_right = 0.99966663
-anchor_bottom = 2.9774075
-offset_left = 0.20007324
-offset_top = -2.0
-offset_right = 0.16000366
-offset_bottom = -1.9000244
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -1547.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 802.0
 grow_horizontal = 0
-pivot_offset = Vector2(1547, 0)
 mouse_filter = 0
 stretch = true
-metadata/_edit_use_anchors_ = true
 
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=1638413875]
 own_world_3d = true
@@ -41,13 +36,13 @@ render_target_update_mode = 4
 
 [node name="Node3D" parent="SubViewportContainer/SubViewport" unique_id=1873184113 instance=ExtResource("1_mine")]
 
-[node name="HudLayer" type="CanvasLayer" parent="SubViewportContainer/SubViewport" unique_id=479737757]
-layer = 5
-
-[node name="Hud" parent="SubViewportContainer/SubViewport/HudLayer" instance=ExtResource("4_hud")]
-
 [node name="SkillTreeLayer" type="CanvasLayer" parent="SubViewportContainer/SubViewport" unique_id=479737756]
 layer = 10
 visible = false
 
 [node name="SkillTree" parent="SubViewportContainer/SubViewport/SkillTreeLayer" unique_id=1114747064 instance=ExtResource("3_skilltree")]
+
+[node name="HudLayer" type="CanvasLayer" parent="." unique_id=479737757]
+layer = 1
+
+[node name="Hud" parent="HudLayer" unique_id=130511913 instance=ExtResource("4_hud")]

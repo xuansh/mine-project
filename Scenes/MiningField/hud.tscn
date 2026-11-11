@@ -82,9 +82,9 @@ script = ExtResource("1_hud")
 [node name="CoinPlate" type="PanelContainer" parent="."]
 layout_mode = 0
 offset_left = 24.0
-offset_top = 20.0
-offset_right = 194.0
-offset_bottom = 68.0
+offset_top = 24.0
+offset_right = 330.0
+offset_bottom = 76.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
@@ -112,9 +112,9 @@ text = "0"
 [node name="DepthPlate" type="PanelContainer" parent="."]
 layout_mode = 0
 offset_left = 24.0
-offset_top = 84.0
-offset_right = 254.0
-offset_bottom = 180.0
+offset_top = 92.0
+offset_right = 330.0
+offset_bottom = 240.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
@@ -141,15 +141,15 @@ theme_override_colors/font_color = Color(0.85098, 0.635294, 0.152941, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.7)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
-theme_override_font_sizes/font_size = 40
+theme_override_font_sizes/font_size = 56
 text = "0M"
 
 [node name="MachinePanel" type="PanelContainer" parent="."]
 layout_mode = 0
 offset_left = 24.0
-offset_top = 196.0
-offset_right = 254.0
-offset_bottom = 322.0
+offset_top = 256.0
+offset_right = 330.0
+offset_bottom = 448.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
@@ -195,9 +195,9 @@ script = ExtResource("2_bar")
 [node name="CargoPanel" type="PanelContainer" parent="."]
 layout_mode = 0
 offset_left = 24.0
-offset_top = 338.0
-offset_right = 254.0
-offset_bottom = 466.0
+offset_top = 464.0
+offset_right = 330.0
+offset_bottom = 624.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
@@ -245,9 +245,9 @@ text = "累计收益 0"
 [node name="NavPanel" type="PanelContainer" parent="."]
 layout_mode = 0
 offset_left = 24.0
-offset_top = 482.0
-offset_right = 254.0
-offset_bottom = 592.0
+offset_top = 640.0
+offset_right = 330.0
+offset_bottom = 768.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
@@ -312,7 +312,7 @@ anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 24.0
-offset_top = -176.0
+offset_top = -172.0
 offset_right = 72.0
 offset_bottom = -24.0
 grow_vertical = 0
@@ -374,10 +374,10 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -204.0
-offset_top = -78.0
+offset_left = -224.0
+offset_top = -104.0
 offset_right = -24.0
-offset_bottom = -24.0
+offset_bottom = -44.0
 grow_horizontal = 0
 grow_vertical = 0
 disabled = true

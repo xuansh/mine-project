@@ -26,7 +26,8 @@ var _cargo_count : int = 0
 var _cargo_max : int = CARGO_MAX_PLACEHOLDER
 
 func _ready() -> void:
-	var mine_field : Node = get_node("../../Node3D")
+	# HUD 在窗口级 CanvasLayer 上（SubViewport 外）：../../ = 主场景根
+	var mine_field : Node = get_node("../../SubViewportContainer/SubViewport/Node3D")
 	mine_field.excavator_spawned.connect(_on_excavator_spawned)
 
 	Game.coins_changed.connect(_on_coins_changed)
