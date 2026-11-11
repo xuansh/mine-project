@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c8b7vwfbmgnta" path="res://Scenes/MiningField/hud.gd" id="1_hud"]
 [ext_resource type="Script" uid="uid://cpoopa1cul2t" path="res://Scenes/UI/hud_segment_bar.gd" id="2_bar"]
-[ext_resource type="FontFile" uid="uid://bf730n0v46u18" path="res://Assets/Fonts/乐米像素体.ttf" id="2_q3om7"]
+[ext_resource type="FontFile" uid="uid://dc53gr162sfom" path="res://Assets/Fonts/ChangBanDianSong-16-SC.ttf" id="2_q3om7"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 content_margin_left = 10.0
@@ -86,7 +86,7 @@ layout_mode = 0
 offset_left = 24.0
 offset_top = 24.0
 offset_right = 330.0
-offset_bottom = 76.0
+offset_bottom = 95.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
@@ -108,13 +108,14 @@ theme_override_colors/font_color = Color(0.941176, 0.933333, 0.894118, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.7)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 40
 text = "0"
+horizontal_alignment = 1
 
 [node name="DepthPlate" type="PanelContainer" parent="." unique_id=1822306878]
 layout_mode = 0
 offset_left = 24.0
-offset_top = 92.0
+offset_top = 109.0
 offset_right = 330.0
 offset_bottom = 240.0
 mouse_filter = 2
@@ -122,7 +123,6 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
 [node name="Body" type="VBoxContainer" parent="DepthPlate" unique_id=1816231306]
 layout_mode = 2
-theme_override_constants/separation = 2
 
 [node name="Chip" type="PanelContainer" parent="DepthPlate/Body" unique_id=1667820654]
 layout_mode = 2
@@ -145,8 +145,9 @@ theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 56
 text = "0M"
+vertical_alignment = 1
 
-[node name="MachinePanel" type="PanelContainer" parent="." unique_id=1420563248]
+[node name="CoinPanel" type="PanelContainer" parent="." unique_id=1420563248]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 256.0
@@ -155,44 +156,13 @@ offset_bottom = 448.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="Body" type="VBoxContainer" parent="MachinePanel" unique_id=1824407691]
+[node name="Body" type="VBoxContainer" parent="CoinPanel" unique_id=1824407691]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="Chip" type="PanelContainer" parent="MachinePanel/Body" unique_id=1434276623]
+[node name="Label" type="Label" parent="CoinPanel/Body" unique_id=1579983030]
 layout_mode = 2
-size_flags_horizontal = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_chip")
-
-[node name="ChipLabel" type="Label" parent="MachinePanel/Body/Chip" unique_id=421157448]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.627451, 0.596078, 0.709804, 1)
-theme_override_font_sizes/font_size = 12
-text = "机体状态"
-
-[node name="NameLabel" type="Label" parent="MachinePanel/Body" unique_id=448400702]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.941176, 0.933333, 0.894118, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.7)
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 2
-theme_override_font_sizes/font_size = 16
-text = "掘进一号"
-
-[node name="FuelLabel" type="Label" parent="MachinePanel/Body" unique_id=1931563662]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.627451, 0.596078, 0.709804, 1)
-theme_override_font_sizes/font_size = 13
-text = "--/--"
-
-[node name="FuelBar" type="Control" parent="MachinePanel/Body" unique_id=307721782]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 14)
-layout_mode = 2
-mouse_filter = 2
-script = ExtResource("2_bar")
+text = "你好"
 
 [node name="CargoPanel" type="PanelContainer" parent="." unique_id=296472767]
 layout_mode = 0

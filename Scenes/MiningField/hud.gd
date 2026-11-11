@@ -13,8 +13,6 @@ const CARGO_MAX_PLACEHOLDER := 20
 
 @onready var _coin_label : Label = %CoinLabel
 @onready var _depth_label : Label = %DepthLabel
-@onready var _fuel_bar : HudSegmentBar = %FuelBar
-@onready var _fuel_label : Label = %FuelLabel
 @onready var _cargo_bar : HudSegmentBar = %CargoBar
 @onready var _cargo_label : Label = %CargoLabel
 @onready var _income_label : Label = %IncomeLabel
@@ -27,12 +25,13 @@ var _cargo_max : int = CARGO_MAX_PLACEHOLDER
 
 @export var mine_field : Node
 
-## HUD 全局字体：改这一个属性，HUD 里所有文字（含以后新增的）一起换。
-## 留空则沿用项目默认字体。
+## HUD 全局字体：换这个资源，HUD 里所有文字一起换。
+## 留空则用项目默认字体。
 @export var font : Font:
 	set(value):
 		font = value
-		_apply_font()
+		if is_node_ready() and not Engine.is_editor_hint():
+			_apply_font()
 
 func _ready() -> void:
 	_apply_font()
@@ -43,22 +42,23 @@ func _ready() -> void:
 	_coin_label.text = _format_coins(Game.coins)
 
 	_cargo_bar.set_values(0.0, float(_cargo_max))
-	_fuel_bar.set_values(0.0, 1.0)
 
 	%BtnSkill.pressed.connect(func() -> void: action_requested.emit(&"skill_tree"))
 	%BtnUpgrade.pressed.connect(func() -> void: action_requested.emit(&"upgrade"))
 
-## 把 font 灌进根节点的 Theme：Theme 沿节点树向下继承，
-## HUD 里所有 Label / Button / 动态新建的文字都会用它；
-## 各控件单独设的 font_size 覆盖不受影响。
+## 把 font 递归灌给每一个文字控件（Label / Button / RichTextLabel 都吃 "font" 这个主题项）。
+## 只改字形不动 font_size，各控件原有的字号设置保持不变。
 func _apply_font() -> void:
-	if Engine.is_editor_hint():
-		return  # 编辑器里不改 theme，免得把运行时 Theme 存进场景文件
-	if font == null:
-		return
-	if theme == null:
-		theme = Theme.new()
-	theme.default_font = font
+	_apply_font_to(self)
+
+func _apply_font_to(node : Node) -> void:
+	for child in node.get_children():
+		if child is Control:
+			if font != null:
+				child.add_theme_font_override("font", font)
+			else:
+				child.remove_theme_font_override("font")
+		_apply_font_to(child)
 
 func _process(_delta : float) -> void:
 	if is_instance_valid(_excavator):
@@ -70,34 +70,24 @@ func _process(_delta : float) -> void:
 
 func _on_excavator_spawned(excavator : MineableEntity) -> void:
 	if is_instance_valid(_excavator):
-		_excavator.fuel_changed.disconnect(_on_fuel_changed)
 		_excavator.drop_gained.disconnect(_on_drop_gained)
-		_excavator.fuel_empty.disconnect(_on_fuel_empty)
 
 	_excavator = excavator
 	_spawn_x = excavator.global_position.x
 	_income = 0.0
 	_cargo_count = 0
 
-	excavator.fuel_changed.connect(_on_fuel_changed)
 	excavator.drop_gained.connect(_on_drop_gained)
-	excavator.fuel_empty.connect(_on_fuel_empty)
 
 	var fuel := excavator.get_fuel_state()
-	_on_fuel_changed(fuel.x, fuel.y)
 	_refresh_cargo()
 
-func _on_fuel_changed(current : float, max_fuel : float) -> void:
-	_fuel_bar.set_values(current, max_fuel)
-	_fuel_label.text = "%d/%d" % [roundi(current), roundi(max_fuel)]
 
 func _on_drop_gained(_ore_name : String, value : float) -> void:
 	_income += value
 	_cargo_count += 1
 	_refresh_cargo()
 
-func _on_fuel_empty() -> void:
-	_fuel_label.text = "燃油耗尽"
 
 func _refresh_cargo() -> void:
 	_cargo_bar.set_values(float(_cargo_count), float(_cargo_max))
