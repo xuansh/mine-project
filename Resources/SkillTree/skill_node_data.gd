@@ -1,0 +1,44 @@
+class_name SkillNodeData
+extends Resource
+
+## 升级树里的一个节点。只存数据，不负责显示。
+## 升级系统接入后，从 effect_key / effect_value 读取效果。
+
+enum Shape {
+	SQUARE,
+	HEXAGON,
+}
+
+@export var id : StringName = &""
+@export var title : String = "未命名节点"
+@export_multiline var description : String = ""
+
+## 给升级系统读的效果键，例如 dig_speed / ore_value / core
+@export var effect_key : StringName = &""
+## 效果幅度，0.1 表示 +10%
+@export var effect_value : float = 0.0
+
+## 解锁消耗（占位，目前不扣钱）
+@export var cost : int = 0
+@export var max_level : int = 1
+
+@export var accent_color : Color = Color("d9a227")
+@export var shape : Shape = Shape.SQUARE
+
+## 相对树中心的偏移，由 SkillTree 统一摆放，整棵树会自动居中
+@export var position : Vector2 = Vector2.ZERO
+
+## 子节点 id，技能树按它画连线
+@export var children : Array[StringName] = []
+
+## 详情面板里显示的一行效果说明
+func get_effect_text() -> String:
+	match effect_key:
+		&"excavator_speed":
+			return "挖掘机速度 +%d%%" % roundi(effect_value * 100.0)
+		&"ore_value":
+			return "矿石价值 +%d%%" % roundi(effect_value * 100.0)
+		&"core":
+			return "解锁后续改装分支"
+		_:
+			return "暂无效果说明"

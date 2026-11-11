@@ -4,6 +4,8 @@
 
 [resource]
 script = ExtResource("1_l6pb7")
+total_fuel = 100.0
+fuelConsumptionPerSecond = 4.0
 speed = 10.0
 attack = 8.0
 metadata/_custom_type_script = "uid://oow0yxgldp0v"
