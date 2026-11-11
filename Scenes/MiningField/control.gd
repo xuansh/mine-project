@@ -7,9 +7,9 @@ extends Control
 
 @onready var _skill_tree_layer : CanvasLayer = $SubViewportContainer/SubViewport/SkillTreeLayer
 @onready var _skill_tree : SkillTree = $SubViewportContainer/SubViewport/SkillTreeLayer/SkillTree
-@onready var _hud : Hud = $HudLayer/Hud
 @onready var _upgrade_panel : UpgradePanel = $SubViewportContainer/SubViewport/Node3D/UpgradePanel
 
+@export var _hud : Hud
 func _ready() -> void:
 	_skill_tree.close_requested.connect(_on_skill_tree_close_requested)
 	_skill_tree_layer.visible = false

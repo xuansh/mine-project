@@ -1,7 +1,8 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene format=3 uid="uid://b1hgy5d37euas"]
 
-[ext_resource type="Script" path="res://Scenes/MiningField/hud.gd" id="1_hud"]
-[ext_resource type="Script" path="res://Scenes/UI/hud_segment_bar.gd" id="2_bar"]
+[ext_resource type="Script" uid="uid://c8b7vwfbmgnta" path="res://Scenes/MiningField/hud.gd" id="1_hud"]
+[ext_resource type="Script" uid="uid://cpoopa1cul2t" path="res://Scenes/UI/hud_segment_bar.gd" id="2_bar"]
+[ext_resource type="FontFile" uid="uid://bf730n0v46u18" path="res://Assets/Fonts/乐米像素体.ttf" id="2_q3om7"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 content_margin_left = 10.0
@@ -17,6 +18,14 @@ border_color = Color(0.431373, 0.407843, 0.517647, 1)
 shadow_color = Color(0.133333, 0.109804, 0.188235, 1)
 shadow_size = 2
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_coin"]
+bg_color = Color(0.85098, 0.635294, 0.152941, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.039216, 0.031373, 0.023529, 1)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_chip"]
 content_margin_left = 8.0
 content_margin_top = 2.0
@@ -29,14 +38,6 @@ border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.431373, 0.407843, 0.517647, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_coin"]
-bg_color = Color(0.85098, 0.635294, 0.152941, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.039216, 0.031373, 0.023529, 1)
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_normal"]
 bg_color = Color(0.070588, 0.062745, 0.101961, 1)
 border_width_left = 2
@@ -44,14 +45,6 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.317647, 0.290196, 0.4, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_hover"]
-bg_color = Color(0.121569, 0.105882, 0.172549, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.431373, 0.407843, 0.517647, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_pressed"]
 bg_color = Color(0.219608, 0.192157, 0.290196, 1)
@@ -61,6 +54,14 @@ border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.85098, 0.635294, 0.152941, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_hover"]
+bg_color = Color(0.121569, 0.105882, 0.172549, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.431373, 0.407843, 0.517647, 1)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_disabled"]
 bg_color = Color(0.054902, 0.047059, 0.078431, 1)
 border_width_left = 2
@@ -69,7 +70,7 @@ border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.156863, 0.141176, 0.196078, 1)
 
-[node name="Hud" type="Control"]
+[node name="Hud" type="Control" unique_id=698131009]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -78,8 +79,9 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_hud")
+font = ExtResource("2_q3om7")
 
-[node name="CoinPlate" type="PanelContainer" parent="."]
+[node name="CoinPlate" type="PanelContainer" parent="." unique_id=1605746444]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 24.0
@@ -88,18 +90,18 @@ offset_bottom = 76.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="Row" type="HBoxContainer" parent="CoinPlate"]
+[node name="Row" type="HBoxContainer" parent="CoinPlate" unique_id=1160643676]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="CoinChip" type="Panel" parent="CoinPlate/Row"]
+[node name="CoinChip" type="Panel" parent="CoinPlate/Row" unique_id=664187962]
 custom_minimum_size = Vector2(18, 18)
 layout_mode = 2
 size_flags_vertical = 4
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_coin")
 
-[node name="CoinLabel" type="Label" parent="CoinPlate/Row"]
+[node name="CoinLabel" type="Label" parent="CoinPlate/Row" unique_id=569090303]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.941176, 0.933333, 0.894118, 1)
@@ -109,7 +111,7 @@ theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 22
 text = "0"
 
-[node name="DepthPlate" type="PanelContainer" parent="."]
+[node name="DepthPlate" type="PanelContainer" parent="." unique_id=1822306878]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 92.0
@@ -118,23 +120,23 @@ offset_bottom = 240.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="Body" type="VBoxContainer" parent="DepthPlate"]
+[node name="Body" type="VBoxContainer" parent="DepthPlate" unique_id=1816231306]
 layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="Chip" type="PanelContainer" parent="DepthPlate/Body"]
+[node name="Chip" type="PanelContainer" parent="DepthPlate/Body" unique_id=1667820654]
 layout_mode = 2
 size_flags_horizontal = 0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_chip")
 
-[node name="ChipLabel" type="Label" parent="DepthPlate/Body/Chip"]
+[node name="ChipLabel" type="Label" parent="DepthPlate/Body/Chip" unique_id=902391429]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.627451, 0.596078, 0.709804, 1)
 theme_override_font_sizes/font_size = 12
 text = "掘进深度"
 
-[node name="DepthLabel" type="Label" parent="DepthPlate/Body"]
+[node name="DepthLabel" type="Label" parent="DepthPlate/Body" unique_id=478244533]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85098, 0.635294, 0.152941, 1)
@@ -144,7 +146,7 @@ theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 56
 text = "0M"
 
-[node name="MachinePanel" type="PanelContainer" parent="."]
+[node name="MachinePanel" type="PanelContainer" parent="." unique_id=1420563248]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 256.0
@@ -153,23 +155,23 @@ offset_bottom = 448.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="Body" type="VBoxContainer" parent="MachinePanel"]
+[node name="Body" type="VBoxContainer" parent="MachinePanel" unique_id=1824407691]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="Chip" type="PanelContainer" parent="MachinePanel/Body"]
+[node name="Chip" type="PanelContainer" parent="MachinePanel/Body" unique_id=1434276623]
 layout_mode = 2
 size_flags_horizontal = 0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_chip")
 
-[node name="ChipLabel" type="Label" parent="MachinePanel/Body/Chip"]
+[node name="ChipLabel" type="Label" parent="MachinePanel/Body/Chip" unique_id=421157448]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.627451, 0.596078, 0.709804, 1)
 theme_override_font_sizes/font_size = 12
 text = "机体状态"
 
-[node name="NameLabel" type="Label" parent="MachinePanel/Body"]
+[node name="NameLabel" type="Label" parent="MachinePanel/Body" unique_id=448400702]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.941176, 0.933333, 0.894118, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.7)
@@ -178,21 +180,21 @@ theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 16
 text = "掘进一号"
 
-[node name="FuelLabel" type="Label" parent="MachinePanel/Body"]
+[node name="FuelLabel" type="Label" parent="MachinePanel/Body" unique_id=1931563662]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.627451, 0.596078, 0.709804, 1)
 theme_override_font_sizes/font_size = 13
 text = "--/--"
 
-[node name="FuelBar" type="Control" parent="MachinePanel/Body"]
+[node name="FuelBar" type="Control" parent="MachinePanel/Body" unique_id=307721782]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 14)
 layout_mode = 2
 mouse_filter = 2
 script = ExtResource("2_bar")
 
-[node name="CargoPanel" type="PanelContainer" parent="."]
+[node name="CargoPanel" type="PanelContainer" parent="." unique_id=296472767]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 464.0
@@ -201,23 +203,23 @@ offset_bottom = 624.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="Body" type="VBoxContainer" parent="CargoPanel"]
+[node name="Body" type="VBoxContainer" parent="CargoPanel" unique_id=241302137]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="Chip" type="PanelContainer" parent="CargoPanel/Body"]
+[node name="Chip" type="PanelContainer" parent="CargoPanel/Body" unique_id=1098184038]
 layout_mode = 2
 size_flags_horizontal = 0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_chip")
 
-[node name="ChipLabel" type="Label" parent="CargoPanel/Body/Chip"]
+[node name="ChipLabel" type="Label" parent="CargoPanel/Body/Chip" unique_id=2063833730]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.627451, 0.596078, 0.709804, 1)
 theme_override_font_sizes/font_size = 12
 text = "货舱与收益"
 
-[node name="CargoLabel" type="Label" parent="CargoPanel/Body"]
+[node name="CargoLabel" type="Label" parent="CargoPanel/Body" unique_id=1678660081]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.941176, 0.933333, 0.894118, 1)
@@ -227,7 +229,7 @@ theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 16
 text = "0/20"
 
-[node name="CargoBar" type="Control" parent="CargoPanel/Body"]
+[node name="CargoBar" type="Control" parent="CargoPanel/Body" unique_id=521295531]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 14)
 layout_mode = 2
@@ -235,14 +237,14 @@ mouse_filter = 2
 script = ExtResource("2_bar")
 fill_color = Color(0.878431, 0.584314, 0.247059, 1)
 
-[node name="IncomeLabel" type="Label" parent="CargoPanel/Body"]
+[node name="IncomeLabel" type="Label" parent="CargoPanel/Body" unique_id=1465485614]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.627451, 0.596078, 0.709804, 1)
 theme_override_font_sizes/font_size = 13
 text = "累计收益 0"
 
-[node name="NavPanel" type="PanelContainer" parent="."]
+[node name="NavPanel" type="PanelContainer" parent="." unique_id=1499772004]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 640.0
@@ -251,23 +253,23 @@ offset_bottom = 768.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="Body" type="VBoxContainer" parent="NavPanel"]
+[node name="Body" type="VBoxContainer" parent="NavPanel" unique_id=1880677901]
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="Chip" type="PanelContainer" parent="NavPanel/Body"]
+[node name="Chip" type="PanelContainer" parent="NavPanel/Body" unique_id=1198955751]
 layout_mode = 2
 size_flags_horizontal = 0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_chip")
 
-[node name="ChipLabel" type="Label" parent="NavPanel/Body/Chip"]
+[node name="ChipLabel" type="Label" parent="NavPanel/Body/Chip" unique_id=1181902597]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.627451, 0.596078, 0.709804, 1)
 theme_override_font_sizes/font_size = 12
 text = "导航目标"
 
-[node name="TargetLabel" type="Label" parent="NavPanel/Body"]
+[node name="TargetLabel" type="Label" parent="NavPanel/Body" unique_id=20492751]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.941176, 0.933333, 0.894118, 1)
@@ -277,36 +279,13 @@ theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 14
 text = "富矿脉 · 待接入"
 
-[node name="TargetDist" type="Label" parent="NavPanel/Body"]
+[node name="TargetDist" type="Label" parent="NavPanel/Body" unique_id=220423353]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.627451, 0.596078, 0.709804, 1)
 theme_override_font_sizes/font_size = 13
 text = "距离 ——"
 
-[node name="TopRightPlate" type="PanelContainer" parent="."]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -108.0
-offset_top = 20.0
-offset_right = -24.0
-offset_bottom = 64.0
-grow_horizontal = 0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
-
-[node name="PlateLabel" type="Label" parent="TopRightPlate"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.941176, 0.933333, 0.894118, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.7)
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 2
-theme_override_font_sizes/font_size = 18
-text = "矿报"
-horizontal_alignment = 1
-
-[node name="ActionButtons" type="VBoxContainer" parent="."]
+[node name="ActionButtons" type="VBoxContainer" parent="." unique_id=171267671]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -318,77 +297,44 @@ offset_bottom = -24.0
 grow_vertical = 0
 theme_override_constants/separation = 8
 
-[node name="BtnSkill" type="Button" parent="ActionButtons"]
+[node name="BtnSkill" type="Button" parent="ActionButtons" unique_id=1044056216]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(44, 44)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.941176, 0.933333, 0.894118, 1)
-theme_override_colors/font_hover_color = Color(0.85098, 0.635294, 0.152941, 1)
 theme_override_colors/font_pressed_color = Color(0.85098, 0.635294, 0.152941, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.7)
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 2
+theme_override_colors/font_hover_color = Color(0.85098, 0.635294, 0.152941, 1)
 theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_btn_disabled")
 text = "技"
 
-[node name="BtnUpgrade" type="Button" parent="ActionButtons"]
+[node name="BtnUpgrade" type="Button" parent="ActionButtons" unique_id=66755070]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(44, 44)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.941176, 0.933333, 0.894118, 1)
-theme_override_colors/font_hover_color = Color(0.85098, 0.635294, 0.152941, 1)
 theme_override_colors/font_pressed_color = Color(0.85098, 0.635294, 0.152941, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.7)
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 2
+theme_override_colors/font_hover_color = Color(0.85098, 0.635294, 0.152941, 1)
 theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_btn_disabled")
 text = "改"
 
-[node name="BtnPause" type="Button" parent="ActionButtons"]
+[node name="BtnPause" type="Button" parent="ActionButtons" unique_id=928792737]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(44, 44)
 layout_mode = 2
-disabled = true
 theme_override_colors/font_color = Color(0.627451, 0.596078, 0.709804, 1)
 theme_override_colors/font_disabled_color = Color(0.407843, 0.388235, 0.47451, 1)
 theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_btn_disabled")
-text = "停"
-
-[node name="ReturnButton" type="Button" parent="."]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -224.0
-offset_top = -104.0
-offset_right = -24.0
-offset_bottom = -44.0
-grow_horizontal = 0
-grow_vertical = 0
 disabled = true
-theme_override_colors/font_color = Color(0.941176, 0.933333, 0.894118, 1)
-theme_override_colors/font_disabled_color = Color(0.407843, 0.388235, 0.47451, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.7)
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 2
-theme_override_font_sizes/font_size = 20
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
-theme_override_styles/disabled = SubResource("StyleBoxFlat_btn_disabled")
-text = "回地表"
+text = "停"

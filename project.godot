@@ -21,15 +21,19 @@ Game="*uid://djplay2ogwslm"
 
 [display]
 
-window/hdr/request_hdr_output=true
-; 设计分辨率 1920x1080，所有 UI 按这个基准摆放；窗口默认开 1152x648
 window/size/viewport_width=1920
 window/size/viewport_height=1080
 window/size/window_width_override=1152
 window/size/window_height_override=648
-; canvas_items 等比缩放：任意窗口尺寸 UI 都按比例缩放不变形；expand 适配非 16:9 宽高比
+window/hdr/request_hdr_output=true
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+
+[file_customization]
+
+folder_colors={
+"res://Assets/Fonts/": "red"
+}
 
 [input]
 

@@ -25,9 +25,18 @@ var _income : float = 0.0
 var _cargo_count : int = 0
 var _cargo_max : int = CARGO_MAX_PLACEHOLDER
 
+@export var mine_field : Node
+
+## HUD 全局字体：改这一个属性，HUD 里所有文字（含以后新增的）一起换。
+## 留空则沿用项目默认字体。
+@export var font : Font:
+	set(value):
+		font = value
+		_apply_font()
+
 func _ready() -> void:
-	# HUD 在窗口级 CanvasLayer 上（SubViewport 外）：../../ = 主场景根
-	var mine_field : Node = get_node("../../SubViewportContainer/SubViewport/Node3D")
+	_apply_font()
+
 	mine_field.excavator_spawned.connect(_on_excavator_spawned)
 
 	Game.coins_changed.connect(_on_coins_changed)
@@ -38,6 +47,18 @@ func _ready() -> void:
 
 	%BtnSkill.pressed.connect(func() -> void: action_requested.emit(&"skill_tree"))
 	%BtnUpgrade.pressed.connect(func() -> void: action_requested.emit(&"upgrade"))
+
+## 把 font 灌进根节点的 Theme：Theme 沿节点树向下继承，
+## HUD 里所有 Label / Button / 动态新建的文字都会用它；
+## 各控件单独设的 font_size 覆盖不受影响。
+func _apply_font() -> void:
+	if Engine.is_editor_hint():
+		return  # 编辑器里不改 theme，免得把运行时 Theme 存进场景文件
+	if font == null:
+		return
+	if theme == null:
+		theme = Theme.new()
+	theme.default_font = font
 
 func _process(_delta : float) -> void:
 	if is_instance_valid(_excavator):
