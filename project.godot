@@ -35,6 +35,20 @@ folder_colors={
 "res://Assets/Fonts/": "red"
 }
 
+[gui]
+
+; 像素字体渲染：关抗锯齿 / hinting / 亚像素定位，否则字形边缘会闪
+theme/default_font_antialiasing=0
+theme/default_font_hinting=0
+theme/default_font_subpixel_positioning=0
+theme/default_font_generate_mipmaps=false
+
+[rendering]
+
+; UI 落在半像素上会闪（非整数倍缩放时）：统一吸附到整数像素
+2d/snap/snap_2d_transforms_to_pixel=true
+2d/snap/snap_2d_vertices_to_pixel=true
+
 [input]
 
 Keyboard-W={
