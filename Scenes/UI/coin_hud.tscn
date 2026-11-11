@@ -7,28 +7,22 @@ content_margin_left = 12.0
 content_margin_top = 8.0
 content_margin_right = 16.0
 content_margin_bottom = 8.0
-bg_color = Color(0.101961, 0.082353, 0.070588, 0.85)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.431373, 0.392157, 0.34902, 1)
-corner_radius_top_left = 6
-corner_radius_top_right = 6
-corner_radius_bottom_right = 6
-corner_radius_bottom_left = 6
+bg_color = Color(0.094118, 0.078431, 0.12549, 0.92)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.431373, 0.407843, 0.517647, 1)
+shadow_color = Color(0.133333, 0.109804, 0.188235, 1)
+shadow_size = 2
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_coin"]
 bg_color = Color(0.85098, 0.635294, 0.152941, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
 border_color = Color(0.039216, 0.031373, 0.023529, 1)
-corner_radius_top_left = 9
-corner_radius_top_right = 9
-corner_radius_bottom_right = 9
-corner_radius_bottom_left = 9
 
 [node name="CoinHUD" type="CanvasLayer"]
 script = ExtResource("1_hud")
@@ -51,7 +45,10 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_coin")
 
 [node name="ValueLabel" type="Label" parent="Panel/Row"]
 unique_name_in_owner = true
-theme_override_colors/font_color = Color(0.94902, 0.933333, 0.87451, 1)
+theme_override_colors/font_color = Color(0.941176, 0.933333, 0.894118, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.7)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 22
 text = "0"
 vertical_alignment = 1

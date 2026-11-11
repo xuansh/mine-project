@@ -17,17 +17,18 @@ const DEFAULT_DEFINITION_PATHS := [
 	"res://Resources/Upgrades/engine.tres",
 ]
 
-# ---- 色板（GDD 4.8：近黑底 #0E0B09、面板 #1A1512、唯一强调色工程黄 #D9A227）----
-const COLOR_MASK := Color("0E0B09")
-const COLOR_PANEL := Color("1A1512")
-const COLOR_CARD := Color("221B16")
-const COLOR_BORDER := Color("6E6459")
+# ---- 色板（像素 HUD 风：深紫夜底 #0B0A12、面板 #181420、灰紫描边 #6E6884、唯一强调色工程黄 #D9A227）----
+const COLOR_MASK := Color("0b0a12")
+const COLOR_PANEL := Color("181420")
+const COLOR_CARD := Color("221d30")
+const COLOR_BORDER := Color("6e6884")
+const COLOR_FRAME_DARK := Color("221c30")
 const COLOR_ACCENT := Color("D9A227")
 const COLOR_ACCENT_TEXT := Color("2A1E05")
-const COLOR_TEXT := Color("F2EEDF")
-const COLOR_SUBTEXT := Color("8A7E70")
-const COLOR_DISABLED_BG := Color("2C241E")
-const COLOR_DISABLED_TEXT := Color("5C534A")
+const COLOR_TEXT := Color("F0EEE4")
+const COLOR_SUBTEXT := Color("9a94ac")
+const COLOR_DISABLED_BG := Color("1b1726")
+const COLOR_DISABLED_TEXT := Color("6b667d")
 
 @onready var _panel : PanelContainer = $Dim/Center/Panel
 @onready var _cards_box : VBoxContainer = $Dim/Center/Panel/Margin/Body/Cards
@@ -97,7 +98,7 @@ func _aggregate_definitions() -> void:
 # ---------------------------------------------------------------- 面板搭建
 
 func _apply_panel_style() -> void:
-	_panel.add_theme_stylebox_override("panel", _make_box_style(COLOR_PANEL, COLOR_BORDER, 10))
+	_panel.add_theme_stylebox_override("panel", _make_box_style(COLOR_PANEL, COLOR_BORDER))
 
 
 func _build_cards() -> void:
@@ -110,7 +111,7 @@ func _make_card(group : StringName, defs : Array) -> PanelContainer:
 	var primary : UpgradeDefinition = defs[0]
 
 	var card := PanelContainer.new()
-	card.add_theme_stylebox_override("panel", _make_box_style(COLOR_CARD, COLOR_BORDER, 8))
+	card.add_theme_stylebox_override("panel", _make_box_style(COLOR_CARD, COLOR_BORDER))
 
 	var margin := MarginContainer.new()
 	for side in ["margin_left", "margin_top", "margin_right", "margin_bottom"]:
@@ -135,6 +136,9 @@ func _make_card(group : StringName, defs : Array) -> PanelContainer:
 	title.text = primary.title
 	title.add_theme_font_size_override("font_size", 20)
 	title.add_theme_color_override("font_color", COLOR_TEXT)
+	title.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.7))
+	title.add_theme_constant_override("shadow_offset_x", 2)
+	title.add_theme_constant_override("shadow_offset_y", 2)
 	title_row.add_child(title)
 
 	var level := Label.new()
@@ -167,8 +171,11 @@ func _make_card(group : StringName, defs : Array) -> PanelContainer:
 	button.add_theme_font_size_override("font_size", 18)
 	button.add_theme_color_override("font_color", COLOR_ACCENT_TEXT)
 	button.add_theme_color_override("font_disabled_color", COLOR_DISABLED_TEXT)
-	button.add_theme_stylebox_override("normal", _make_box_style(COLOR_ACCENT, COLOR_ACCENT, 6))
-	button.add_theme_stylebox_override("disabled", _make_box_style(COLOR_DISABLED_BG, COLOR_DISABLED_BG, 6))
+	button.add_theme_color_override("font_shadow_color", Color(1, 1, 1, 0.18))
+	button.add_theme_constant_override("shadow_offset_x", 2)
+	button.add_theme_constant_override("shadow_offset_y", 2)
+	button.add_theme_stylebox_override("normal", _make_box_style(COLOR_ACCENT, COLOR_ACCENT))
+	button.add_theme_stylebox_override("disabled", _make_box_style(COLOR_DISABLED_BG, COLOR_BORDER))
 	button.pressed.connect(_on_buy_pressed.bind(group))
 	hbox.add_child(button)
 
@@ -282,18 +289,17 @@ func _input(event : InputEvent) -> void:
 
 # ---------------------------------------------------------------- 工具
 
-func _make_box_style(bg : Color, border : Color, radius : int) -> StyleBoxFlat:
+func _make_box_style(bg : Color, border : Color) -> StyleBoxFlat:
+	# 像素风：直角 + 2px 描边 + 外圈暗色定界，模拟参考图的双层框
 	var style := StyleBoxFlat.new()
 	style.bg_color = bg
-	style.border_width_left = 1
-	style.border_width_top = 1
-	style.border_width_right = 1
-	style.border_width_bottom = 1
+	style.border_width_left = 2
+	style.border_width_top = 2
+	style.border_width_right = 2
+	style.border_width_bottom = 2
 	style.border_color = border
-	style.corner_radius_top_left = radius
-	style.corner_radius_top_right = radius
-	style.corner_radius_bottom_right = radius
-	style.corner_radius_bottom_left = radius
+	style.shadow_color = COLOR_FRAME_DARK
+	style.shadow_size = 2
 	style.content_margin_left = 14
 	style.content_margin_right = 14
 	style.content_margin_top = 10

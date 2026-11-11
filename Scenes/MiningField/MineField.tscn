@@ -16,8 +16,8 @@ agent_max_slope = 72.57
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_34eps"]
 emission_enabled = true
-emission = Color(0.59570175, 0, 0.10057377, 1)
-emission_energy_multiplier = 16.0
+emission = Color(0.85098, 0.635294, 0.152941, 1)
+emission_energy_multiplier = 10.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_6le5l"]
 size = Vector3(0.1640625, 0.045776367, 50.413734)
@@ -61,14 +61,15 @@ script = ExtResource("2_6lt4f")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1725226773]
 transform = Transform3D(0.7071068, 0.485, -0.5148, 0, 0.7276, 0.686, 0.7071068, -0.485, 0.5148, -25.7, 34.3, 25.7)
-light_energy = 1.5
+light_color = Color(0.86, 0.89, 1, 1)
+light_energy = 1.4
 shadow_enabled = true
 shadow_blur = 2.0
 
 [node name="RimLight" type="OmniLight3D" parent="." unique_id=661238904]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 8, -18)
-light_color = Color(0.431373, 0.541176, 0.682353, 1)
-light_energy = 0.6
+light_color = Color(0.431373, 0.407843, 0.62, 1)
+light_energy = 0.8
 omni_range = 30.0
 
 [node name="CoinHUD" parent="." unique_id=1958775257 instance=ExtResource("7_hud")]

@@ -3,10 +3,10 @@
 [resource]
 resource_name = "Mine Soft"
 background_mode = 1
-background_color = Color(0.043137, 0.05098, 0.062745, 1)
+background_color = Color(0.043137, 0.039216, 0.070588, 1)
 ambient_light_source = 2
-ambient_light_color = Color(0.164706, 0.2, 0.25098, 1)
-ambient_light_energy = 0.3
+ambient_light_color = Color(0.160784, 0.14902, 0.239216, 1)
+ambient_light_energy = 0.35
 reflected_light_source = 1
 tonemap_mode = 3
 tonemap_exposure = 1.35
@@ -14,11 +14,11 @@ tonemap_white = 6.0
 ssao_enabled = true
 glow_enabled = true
 glow_bloom = 0.05
-fog_light_color = Color(0.478, 0.533, 0.6, 1)
+fog_light_color = Color(0.360784, 0.34902, 0.458824, 1)
 fog_light_energy = 0.2
 fog_density = 0.02
 fog_aerial_perspective = 0.4
 volumetric_fog_enabled = true
 volumetric_fog_density = 0.015
-volumetric_fog_albedo = Color(0.6106829, 0.610683, 0.610683, 1)
+volumetric_fog_albedo = Color(0.54902, 0.529412, 0.619608, 1)
 volumetric_fog_anisotropy = 0.75

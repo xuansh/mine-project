@@ -29,10 +29,11 @@ func _ready() -> void:
 	focus_mode = Control.FOCUS_ALL
 
 	_box = StyleBoxFlat.new()
-	_box.bg_color = Color("15100c")
-	_box.set_corner_radius_all(14)
-	_box.set_border_width_all(3)
-	_box.shadow_size = 12
+	_box.bg_color = Color("181420")
+	_box.set_corner_radius_all(0)
+	_box.set_border_width_all(2)
+	_box.shadow_size = 2
+	_box.shadow_color = Color("221c30")
 
 	_label = Label.new()
 	_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -82,24 +83,23 @@ func _draw() -> void:
 		_draw_hexagon(accent)
 	else:
 		_box.border_color = accent
-		_box.shadow_color = Color(accent, 0.24)
 		draw_style_box(_box, Rect2(Vector2.ZERO, size))
 
 	_draw_icon(accent)
 
 	if is_selected or has_focus():
 		var radius : float = maxf(size.x, size.y) * 0.5 + 8.0
-		draw_arc(size * 0.5, radius, 0.0, TAU, 64, Color(0.98, 0.90, 0.72, 0.55), 1.5, true)
+		draw_arc(size * 0.5, radius, 0.0, TAU, 48, Color(0.94, 0.93, 0.89, 0.6), 2.0, false)
 
 func _draw_hexagon(accent : Color) -> void:
 	var points := _hex_points(size.x * 0.5 - 3.0)
-	draw_colored_polygon(points, Color("1a130d"))
+	draw_colored_polygon(points, Color("181420"))
 
 	var outline := points.duplicate()
 	outline.append(points[0])
-	draw_polyline(outline, Color(accent, 0.10), 18.0, true)
-	draw_polyline(outline, Color(accent, 0.28), 8.0, true)
-	draw_polyline(outline, accent, 2.5, true)
+	draw_polyline(outline, Color(accent, 0.10), 12.0, false)
+	draw_polyline(outline, Color(accent, 0.28), 5.0, false)
+	draw_polyline(outline, accent, 2.0, false)
 
 func _draw_icon(accent : Color) -> void:
 	var center := size * 0.5
@@ -174,7 +174,7 @@ func _refresh() -> void:
 		_box.border_color = _accent_color()
 	if _label != null and data != null:
 		_label.text = data.title
-		var label_color := Color("d9c8a8") if state != State.LOCKED else Color("6b5f4e")
+		var label_color := Color(0.92, 0.91, 0.95) if state != State.LOCKED else Color(0.42, 0.4, 0.49)
 		_label.add_theme_color_override("font_color", label_color)
 	queue_redraw()
 

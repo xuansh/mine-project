@@ -5,183 +5,158 @@
 [ext_resource type="Resource" uid="uid://crhuayu85v5k2" path="res://Resources/SkillTree/basic_skill_tree.tres" id="3_data"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tab_active"]
-content_margin_left = 20.0
+content_margin_left = 18.0
 content_margin_top = 11.0
 content_margin_right = 14.0
 content_margin_bottom = 11.0
-bg_color = Color(0.141176, 0.105882, 0.070588, 0.96)
-border_width_left = 3
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.85098, 0.635294, 0.152941, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-shadow_color = Color(0.85098, 0.635294, 0.152941, 0.1)
-shadow_size = 8
+bg_color = Color(0.133333, 0.113725, 0.188235, 1)
+border_width_left = 4
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.431373, 0.407843, 0.517647, 1)
+shadow_color = Color(0.133333, 0.109804, 0.188235, 1)
+shadow_size = 2
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tab_focus"]
-content_margin_left = 20.0
+content_margin_left = 18.0
 content_margin_top = 11.0
 content_margin_right = 14.0
 content_margin_bottom = 11.0
 bg_color = Color(0, 0, 0, 0)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.560784, 0.455063, 0.254189, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.85098, 0.635294, 0.152941, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tab_normal"]
-content_margin_left = 20.0
+content_margin_left = 18.0
 content_margin_top = 11.0
 content_margin_right = 14.0
 content_margin_bottom = 11.0
-bg_color = Color(0.082353, 0.066667, 0.05098, 0.92)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.290196, 0.235294, 0.172549, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
+bg_color = Color(0.070588, 0.062745, 0.101961, 0.92)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.227451, 0.207843, 0.286275, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tab_hover"]
-content_margin_left = 20.0
+content_margin_left = 18.0
 content_margin_top = 11.0
 content_margin_right = 14.0
 content_margin_bottom = 11.0
-bg_color = Color(0.133333, 0.101961, 0.070588, 0.96)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.478431, 0.376471, 0.203922, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
+bg_color = Color(0.121569, 0.105882, 0.172549, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.317647, 0.290196, 0.4, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tab_disabled"]
-content_margin_left = 20.0
+content_margin_left = 18.0
 content_margin_top = 11.0
 content_margin_right = 14.0
 content_margin_bottom = 11.0
-bg_color = Color(0.058824, 0.047059, 0.039216, 0.85)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.168627, 0.137255, 0.101961, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
+bg_color = Color(0.054902, 0.047059, 0.078431, 0.85)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.156863, 0.141176, 0.196078, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_detail"]
-content_margin_left = 24.0
-content_margin_top = 22.0
-content_margin_right = 24.0
+content_margin_left = 22.0
+content_margin_top = 30.0
+content_margin_right = 22.0
 content_margin_bottom = 22.0
-bg_color = Color(0.070588, 0.054902, 0.043137, 0.94)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.286275, 0.227451, 0.160784, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-shadow_color = Color(0, 0, 0, 0.45)
-shadow_size = 16
+bg_color = Color(0.094118, 0.078431, 0.12549, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.431373, 0.407843, 0.517647, 1)
+shadow_color = Color(0.133333, 0.109804, 0.188235, 1)
+shadow_size = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_title_plate"]
+content_margin_left = 12.0
+content_margin_top = 5.0
+content_margin_right = 14.0
+content_margin_bottom = 5.0
+bg_color = Color(0.070588, 0.062745, 0.101961, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.431373, 0.407843, 0.517647, 1)
+shadow_color = Color(0.133333, 0.109804, 0.188235, 1)
+shadow_size = 2
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_action_normal"]
 content_margin_left = 14.0
 content_margin_top = 12.0
 content_margin_right = 14.0
 content_margin_bottom = 12.0
-bg_color = Color(0.164706, 0.129412, 0.086275, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.427451, 0.341176, 0.192157, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
+bg_color = Color(0.121569, 0.105882, 0.172549, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.317647, 0.290196, 0.4, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_action_hover"]
 content_margin_left = 14.0
 content_margin_top = 12.0
 content_margin_right = 14.0
 content_margin_bottom = 12.0
-bg_color = Color(0.227451, 0.172549, 0.101961, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
+bg_color = Color(0.219608, 0.192157, 0.290196, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
 border_color = Color(0.85098, 0.635294, 0.152941, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_action_disabled"]
 content_margin_left = 14.0
 content_margin_top = 12.0
 content_margin_right = 14.0
 content_margin_bottom = 12.0
-bg_color = Color(0.090196, 0.07451, 0.054902, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.227451, 0.188235, 0.145098, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
+bg_color = Color(0.070588, 0.062745, 0.101961, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.180392, 0.160784, 0.239216, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_close_normal"]
-bg_color = Color(0, 0, 0, 0)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
+content_margin_left = 4.0
+content_margin_top = 2.0
+content_margin_right = 4.0
+content_margin_bottom = 2.0
+bg_color = Color(0.070588, 0.062745, 0.101961, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.317647, 0.290196, 0.4, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_close_pressed"]
-bg_color = Color(0.192157, 0.145098, 0.094118, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.427451, 0.341176, 0.192157, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
+bg_color = Color(0.219608, 0.192157, 0.290196, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.85098, 0.635294, 0.152941, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_close_hover"]
-bg_color = Color(0.141176, 0.105882, 0.070588, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.427451, 0.341176, 0.192157, 1)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
+bg_color = Color(0.121569, 0.105882, 0.172549, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.431373, 0.407843, 0.517647, 1)
 
 [node name="SkillTree" type="Control" unique_id=1657680937]
 texture_filter = 2
@@ -204,10 +179,18 @@ offset_bottom = 150.0
 mouse_filter = 2
 theme_override_constants/separation = 3
 
-[node name="Title" type="Label" parent="TopLeft" unique_id=723341793]
+[node name="TitlePlate" type="PanelContainer" parent="TopLeft"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.941176, 0.894118, 0.796078, 1)
-theme_override_font_sizes/font_size = 32
+size_flags_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_title_plate")
+
+[node name="Title" type="Label" parent="TopLeft/TitlePlate" unique_id=723341793]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.941176, 0.933333, 0.894118, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.7)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 26
 text = "改装终端"
 
 [node name="Tabs" type="VBoxContainer" parent="." unique_id=2129841685]
@@ -222,10 +205,13 @@ theme_override_constants/separation = 10
 [node name="TreeTab" type="Button" parent="Tabs" unique_id=1141808018]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.937255, 0.87451, 0.803922, 1)
-theme_override_colors/font_focus_color = Color(0.988235, 0.945098, 0.831373, 1)
-theme_override_colors/font_pressed_color = Color(0.988235, 0.945098, 0.831373, 1)
-theme_override_colors/font_hover_color = Color(0.988235, 0.945098, 0.831373, 1)
+theme_override_colors/font_color = Color(0.941176, 0.933333, 0.894118, 1)
+theme_override_colors/font_focus_color = Color(0.85098, 0.635294, 0.152941, 1)
+theme_override_colors/font_pressed_color = Color(0.85098, 0.635294, 0.152941, 1)
+theme_override_colors/font_hover_color = Color(0.85098, 0.635294, 0.152941, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.7)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 17
 theme_override_styles/normal = SubResource("StyleBoxFlat_tab_active")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_tab_active")
@@ -237,8 +223,8 @@ alignment = 0
 [node name="MasteryTab" type="Button" parent="Tabs" unique_id=1604865325]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.443137, 0.372549, 0.290196, 1)
-theme_override_colors/font_disabled_color = Color(0.352941, 0.301961, 0.239216, 1)
+theme_override_colors/font_color = Color(0.407843, 0.388235, 0.47451, 1)
+theme_override_colors/font_disabled_color = Color(0.407843, 0.388235, 0.47451, 1)
 theme_override_font_sizes/font_size = 17
 theme_override_styles/normal = SubResource("StyleBoxFlat_tab_normal")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_tab_normal")
@@ -252,8 +238,8 @@ alignment = 0
 [node name="RelicTab" type="Button" parent="Tabs" unique_id=345882687]
 custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.443137, 0.372549, 0.290196, 1)
-theme_override_colors/font_disabled_color = Color(0.352941, 0.301961, 0.239216, 1)
+theme_override_colors/font_color = Color(0.407843, 0.388235, 0.47451, 1)
+theme_override_colors/font_disabled_color = Color(0.407843, 0.388235, 0.47451, 1)
 theme_override_font_sizes/font_size = 17
 theme_override_styles/normal = SubResource("StyleBoxFlat_tab_normal")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_tab_normal")
@@ -294,14 +280,20 @@ theme_override_constants/separation = 9
 [node name="StatusLabel" type="Label" parent="DetailPanel/Content" unique_id=1002093645]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.486275, 0.776471, 0.643137, 1)
+theme_override_colors/font_color = Color(0.482353, 0.839216, 0.643137, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.7)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
 theme_override_font_sizes/font_size = 13
 text = "●  已激活"
 
 [node name="NameLabel" type="Label" parent="DetailPanel/Content" unique_id=100621813]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.94902, 0.901961, 0.811765, 1)
+theme_override_colors/font_color = Color(0.941176, 0.933333, 0.894118, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.7)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 24
 text = "挖掘核心"
 
@@ -309,20 +301,23 @@ text = "挖掘核心"
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85098, 0.635294, 0.152941, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.7)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
 theme_override_font_sizes/font_size = 16
 text = "解锁后续改装分支"
 
 [node name="Divider" type="ColorRect" parent="DetailPanel/Content" unique_id=1752173334]
-custom_minimum_size = Vector2(0, 1)
+custom_minimum_size = Vector2(0, 2)
 layout_mode = 2
 mouse_filter = 2
-color = Color(0.239216, 0.188235, 0.133333, 1)
+color = Color(0.227451, 0.207843, 0.286275, 1)
 
 [node name="DescLabel" type="Label" parent="DetailPanel/Content" unique_id=434034773]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 92)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.705882, 0.643137, 0.541176, 1)
+theme_override_colors/font_color = Color(0.627451, 0.596078, 0.709804, 1)
 theme_override_font_sizes/font_size = 14
 text = "整棵改装树的起点。动力、液压与电控都从这颗核心分配出去。"
 autowrap_mode = 2
@@ -335,7 +330,7 @@ mouse_filter = 2
 [node name="CostLabel" type="Label" parent="DetailPanel/Content" unique_id=1473429951]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.552941, 0.478431, 0.372549, 1)
+theme_override_colors/font_color = Color(0.54902, 0.52549, 0.627451, 1)
 theme_override_font_sizes/font_size = 13
 text = "解锁消耗   ——"
 
@@ -343,9 +338,12 @@ text = "解锁消耗   ——"
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.933333, 0.854902, 0.72549, 1)
-theme_override_colors/font_hover_color = Color(0.988235, 0.945098, 0.831373, 1)
-theme_override_colors/font_disabled_color = Color(0.407843, 0.356863, 0.294118, 1)
+theme_override_colors/font_color = Color(0.941176, 0.933333, 0.894118, 1)
+theme_override_colors/font_hover_color = Color(0.85098, 0.635294, 0.152941, 1)
+theme_override_colors/font_disabled_color = Color(0.407843, 0.388235, 0.47451, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.7)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 15
 theme_override_styles/normal = SubResource("StyleBoxFlat_action_normal")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_action_normal")
@@ -364,9 +362,9 @@ offset_top = 28.0
 offset_right = -32.0
 offset_bottom = 72.0
 grow_horizontal = 0
-theme_override_colors/font_color = Color(0.611765, 0.541176, 0.435294, 1)
-theme_override_colors/font_pressed_color = Color(0.952941, 0.898039, 0.788235, 1)
-theme_override_colors/font_hover_color = Color(0.952941, 0.898039, 0.788235, 1)
+theme_override_colors/font_color = Color(0.627451, 0.596078, 0.709804, 1)
+theme_override_colors/font_pressed_color = Color(0.85098, 0.635294, 0.152941, 1)
+theme_override_colors/font_hover_color = Color(0.941176, 0.933333, 0.894118, 1)
 theme_override_font_sizes/font_size = 26
 theme_override_styles/normal = SubResource("StyleBoxFlat_close_normal")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_close_pressed")

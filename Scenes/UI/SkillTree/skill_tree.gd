@@ -9,7 +9,7 @@ signal skill_selected(skill_id : StringName)
 
 const TreeNodeScript := preload("res://Scenes/UI/SkillTree/skill_tree_node.gd")
 
-const BACKGROUND_COLOR := Color("0b0806")
+const BACKGROUND_COLOR := Color("0b0a12")
 const STAR_SEED : int = 20261111
 
 @export var tree_data : SkillTreeData
@@ -183,7 +183,7 @@ func _draw_backdrop() -> void:
 		draw_texture_rect(_glow_texture, Rect2(center - glow_size * 0.5, glow_size), false)
 
 	for star in _stars:
-		var color := Color(0.92, 0.86, 0.72, star.w)
+		var color := Color(0.86, 0.85, 0.95, star.w)
 		draw_circle(Vector2(star.x * size.x, star.y * size.y), star.z, color)
 
 func _draw_links() -> void:
@@ -201,9 +201,9 @@ func _draw_links() -> void:
 			if child_node.state == SkillTreeNode.State.LOCKED:
 				color = color.darkened(0.55)
 
-			draw_line(from, to, Color(color, 0.10), 14.0, true)
-			draw_line(from, to, Color(color, 0.24), 6.0, true)
-			draw_line(from, to, Color(color, 0.85), 2.5, true)
+			draw_line(from, to, Color(color, 0.10), 12.0, false)
+			draw_line(from, to, Color(color, 0.24), 5.0, false)
+			draw_line(from, to, Color(color, 0.85), 2.0, false)
 
 func _make_stars() -> void:
 	var rng := RandomNumberGenerator.new()
@@ -216,14 +216,14 @@ func _make_stars() -> void:
 			rng.randf_range(0.04, 0.20)
 		))
 
-## 径向渐变贴图：比叠几层圆更平滑，不会出现一圈圈的色阶
+## 径向渐变贴图：只留一点冷色环境光，不做大面积暖色光晕
 func _make_glow_texture() -> void:
 	var gradient := Gradient.new()
 	gradient.offsets = PackedFloat32Array([0.0, 0.45, 1.0])
 	gradient.colors = PackedColorArray([
-		Color(0.44, 0.29, 0.11, 0.16),
-		Color(0.42, 0.27, 0.10, 0.06),
-		Color(0.40, 0.26, 0.10, 0.0),
+		Color(0.14, 0.13, 0.2, 0.10),
+		Color(0.13, 0.12, 0.19, 0.04),
+		Color(0.12, 0.11, 0.18, 0.0),
 	])
 	_glow_texture = GradientTexture2D.new()
 	_glow_texture.gradient = gradient
