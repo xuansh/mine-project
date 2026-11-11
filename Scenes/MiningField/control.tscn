@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://0mwhc64nggdg"]
 
 [ext_resource type="PackedScene" uid="uid://olkeadrk0r0m" path="res://Scenes/MiningField/MineField.tscn" id="1_mine"]
+[ext_resource type="Script" uid="uid://croqj3v6s4o6a" path="res://Scenes/MiningField/control.gd" id="2_control"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/SkillTree/skill_tree.tscn" id="3_skilltree"]
 
 [node name="Control" type="Control" unique_id=1851587370]
 layout_mode = 3
@@ -11,6 +13,7 @@ offset_left = -480.0
 offset_bottom = 270.0
 grow_horizontal = 0
 mouse_filter = 2
+script = ExtResource("2_control")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=792646217]
 layout_mode = 1
@@ -36,3 +39,9 @@ size = Vector2i(1547, 802)
 render_target_update_mode = 4
 
 [node name="Node3D" parent="SubViewportContainer/SubViewport" unique_id=1873184113 instance=ExtResource("1_mine")]
+
+[node name="SkillTreeLayer" type="CanvasLayer" parent="SubViewportContainer/SubViewport" unique_id=479737756]
+layer = 10
+
+[node name="SkillTree" parent="SubViewportContainer/SubViewport/SkillTreeLayer" unique_id=1114747064 instance=ExtResource("3_skilltree")]
+visible = false

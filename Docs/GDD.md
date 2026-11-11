@@ -2,7 +2,7 @@
 
 | 项 | 内容 |
 | --- | --- |
-| 文档版本 | v0.3（原型：挖矿、金币、HUD 已跑通） |
+| 文档版本 | v0.4（原型：挖矿、金币、HUD、升级树界面框架已跑通） |
 | 项目阶段 | 原型（Prototype）：矿区生成、自动挖掘、正交相机已跑通 |
 | 引擎 / 平台 | Godot 4.7 · 移动端优先（`project.godot` 已标记 Mobile） |
 | 目标读者 | 策划、程序、美术（单人/小团队协作） |
@@ -191,6 +191,13 @@
 
 **成本曲线**：`cost(n) = base_cost × 1.55^n`（n 为已购买次数），保证每级成本约为上一级的 1.5 倍，与收益增长大致同步。
 
+#### 4.6.1 升级树界面（原型）
+
+- **位置**：`Scenes/UI/SkillTree/skill_tree.tscn`，实例化在 `Scenes/MiningField/control.tscn` 的 `SubViewport` 内，与 `MineField` 平行；由 `CanvasLayer(layer = 10)` 绘制在矿区与金币 HUD 之上。
+- **开关**：`U` 键切换，右上角 `×` 关闭（`Scenes/MiningField/control.gd` 统一处理输入）。
+- **结构**：由 `Resources/SkillTree/basic_skill_tree.tres` 数据驱动（`SkillTreeData` + `SkillNodeData`）。当前是「挖掘核心」根节点 + 两个分支：`excavator_speed`（挖掘机速度 +10%）、`ore_value`（矿石价值 +10%）。
+- **现状**：只做布局、悬停、选中与右侧详情面板；解锁扣费与实际数值尚未接入。接入时读取节点的 `effect_key / effect_value / cost`，扣除金币后再刷新 `SkillTree._state_for()`。
+
 ### 4.7 相机与操作
 
 | 项 | 设计 |
@@ -309,6 +316,7 @@
 | 相机与点击 | `Scenes/Camera/camera_3d.gd` · `Scenes/MiningField/mine_field.gd` | 点击 → 射线打地面 → 吸附最近小球 → `excavator_scene` 实例化生成（同一时间一台） | 连点重摆、点击反馈、触摸端适配 |
 | 全局状态 | `Autoload/game.gd` | `coins` + `coins_changed(total, delta)` 信号 + `add_coins / spend_coins` | 缺存档、升级等级 |
 | 金币 HUD | `Scenes/UI/coin_hud.tscn` · `Scenes/UI/coin_hud.gd` | CanvasLayer 叠在左上角：金币圆点 + 数字（千分位），加钱时数字闪一下并淡回 | 图标是占位色块；缺"金币跳字"与音效 |
+| 升级树界面 | `Scenes/UI/SkillTree/` · `Resources/SkillTree/` | 挂在 `control.tscn` 的 SubViewport 里与 MineField 平行；`U` / `×` 切换；数据驱动根节点 + 2 分支，可选中查看详情 | 解锁扣费、实际数值生效、更多节点与分支 |
 | 数值配置 | `Resources/Excavators/*.tres` | 只有 `speed = 10.035` | 其余字段为空，需要补齐初始值 |
 
 **建议的近期技术动作**（按性价比排序）：
@@ -360,3 +368,4 @@
 | 2026-11-11 | v0.2 | 挖掘改为"按 `attack_interval` 攻击矿石、扣 `Oredata.hp` 到 0 才清格"，挖完打印/发出掉落价值；新增 `attack` / `attack_interval` 数值与矿表掉落价值列 | — |
 | 2026-11-11 | v0.3 | 落地金币系统：`Oredata.value`（单格金币 = `drop × value`）、`Game.coins` + `coins_changed` 信号、左上角金币 HUD | — |
 | 2026-11-11 | v0.3 | 挖掘机改为点击生成：点击右侧发光小球附近 → 吸附最近小球 → 在该点实例化挖掘机并自动朝矿区推进；场景内预置挖掘机移除 | — |
+| 2026-11-11 | v0.4 | 新增 2D 升级树界面框架：位于 SubViewport 内与 MineField 平行，`U` / `×` 切换；数据驱动「挖掘核心 → 涡轮引擎 / 矿石精炼」；升级扣费与效果尚未接入 | — |
