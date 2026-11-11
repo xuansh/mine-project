@@ -6,6 +6,7 @@
 [ext_resource type="MeshLibrary" uid="uid://2mel1vqw41eu" path="res://Resources/ore_map.meshlib" id="3_s31g4"]
 [ext_resource type="Material" uid="uid://b0yqcvkri2v3k" path="res://Resources/Materials/ground_rock.tres" id="10_ground"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/coin_hud.tscn" id="7_hud"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/upgrade_panel.tscn" id="8_up"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_6le5l"]
 vertices = PackedVector3Array(-24.5, 1, -26.84082, -24.5, 1, 24.40918, 28.75, 0.75, 24.40918, 28.75, 0.75, -26.84082)
@@ -71,3 +72,5 @@ light_energy = 0.6
 omni_range = 30.0
 
 [node name="CoinHUD" parent="." instance=ExtResource("7_hud")]
+
+[node name="UpgradePanel" parent="." instance=ExtResource("8_up")]

@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="UpgradeDefinition" format=3]
+
+[ext_resource type="Script" path="res://Datas/Upgrades/upgrade_definition.gd" id="1_def"]
+
+[resource]
+script = ExtResource("1_def")
+group = &"cargo"
+stat_key = &"cargo_max"
+title = "货舱"
+description = "扩大货舱容积，一趟能运回更多矿石再返程。"
+base_value = 20.0
+max_value = 200.0
+increment = 20.0
+base_cost = 40
+cost_growth = 1.55
+decimals = 0
+unit = " 格"

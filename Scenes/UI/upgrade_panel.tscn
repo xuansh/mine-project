@@ -1,0 +1,91 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://Scenes/UI/upgrade_panel.gd" id="1_panel"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_coin"]
+bg_color = Color(0.85098, 0.635294, 0.152941, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.039216, 0.031373, 0.023529, 1)
+corner_radius_top_left = 9
+corner_radius_top_right = 9
+corner_radius_bottom_right = 9
+corner_radius_bottom_left = 9
+
+[node name="UpgradePanel" type="CanvasLayer"]
+layer = 10
+script = ExtResource("1_panel")
+
+[node name="Dim" type="ColorRect" parent="."]
+layout_mode = 3
+anchors_preset = 10
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.054902, 0.043137, 0.035294, 0.72)
+mouse_filter = 0
+
+[node name="Center" type="CenterContainer" parent="Dim"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Panel" type="PanelContainer" parent="Dim/Center"]
+custom_minimum_size = Vector2(760, 640)
+
+[node name="Margin" type="MarginContainer" parent="Dim/Center/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 24
+
+[node name="Body" type="VBoxContainer" parent="Dim/Center/Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Header" type="HBoxContainer" parent="Dim/Center/Panel/Margin/Body"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="Dim/Center/Panel/Margin/Body/Header"]
+layout_mode = 2
+text = "机器改装"
+theme_override_font_sizes/font_size = 28
+theme_override_colors/font_color = Color(0.94902, 0.933333, 0.87451, 1)
+
+[node name="Spacer" type="Control" parent="Dim/Center/Panel/Margin/Body/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CoinRow" type="HBoxContainer" parent="Dim/Center/Panel/Margin/Body/Header"]
+layout_mode = 2
+theme_override_constants/separation = 8
+size_flags_vertical = 4
+
+[node name="CoinIcon" type="Panel" parent="Dim/Center/Panel/Margin/Body/Header/CoinRow"]
+custom_minimum_size = Vector2(18, 18)
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_coin")
+
+[node name="CoinValue" type="Label" parent="Dim/Center/Panel/Margin/Body/Header/CoinRow"]
+layout_mode = 2
+text = "0"
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.94902, 0.933333, 0.87451, 1)
+
+[node name="CloseButton" type="Button" parent="Dim/Center/Panel/Margin/Body/Header"]
+custom_minimum_size = Vector2(44, 44)
+text = "×"
+
+[node name="Hint" type="Label" parent="Dim/Center/Panel/Margin/Body"]
+layout_mode = 2
+text = "用挖到矿石换来的金币改装机器，再往更深的矿区推进。"
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.541176, 0.494118, 0.439216, 1)
+
+[node name="Cards" type="VBoxContainer" parent="Dim/Center/Panel/Margin/Body"]
+layout_mode = 2
+theme_override_constants/separation = 14

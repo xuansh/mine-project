@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="UpgradeDefinition" format=3]
+
+[ext_resource type="Script" path="res://Datas/Upgrades/upgrade_definition.gd" id="1_def"]
+
+[resource]
+script = ExtResource("1_def")
+group = &"engine"
+stat_key = &"speed"
+title = "引擎"
+description = "提升行驶与回程速度，减少在通道里赶路的时间。"
+base_value = 10.0
+max_value = 25.0
+increment = 1.5
+base_cost = 50
+cost_growth = 1.55
+decimals = 1
+unit = " 单位/秒"

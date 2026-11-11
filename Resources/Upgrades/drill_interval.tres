@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="UpgradeDefinition" format=3]
+
+[ext_resource type="Script" path="res://Datas/Upgrades/upgrade_definition.gd" id="1_def"]
+
+[resource]
+script = ExtResource("1_def")
+group = &"drill"
+stat_key = &"attack_interval"
+title = "攻击间隔"
+description = "凿击之间的间隔缩短，等效提升每秒伤害。"
+base_value = 0.8
+max_value = 0.3
+increment = -0.05
+base_cost = 0
+cost_growth = 1.55
+decimals = 2
+unit = " 秒"

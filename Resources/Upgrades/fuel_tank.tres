@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="UpgradeDefinition" format=3]
+
+[ext_resource type="Script" path="res://Datas/Upgrades/upgrade_definition.gd" id="1_def"]
+
+[resource]
+script = ExtResource("1_def")
+group = &"fuel"
+stat_key = &"fuel_max"
+title = "油箱"
+description = "提升油箱容量，单次下潜可以挖得更久。"
+base_value = 100.0
+max_value = 400.0
+increment = 30.0
+base_cost = 40
+cost_growth = 1.55
+decimals = 0
+unit = " 容量"

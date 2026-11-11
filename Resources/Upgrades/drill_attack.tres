@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="UpgradeDefinition" format=3]
+
+[ext_resource type="Script" path="res://Datas/Upgrades/upgrade_definition.gd" id="1_def"]
+
+[resource]
+script = ExtResource("1_def")
+group = &"drill"
+stat_key = &"attack"
+title = "钻头"
+description = "提升每次凿击伤害，并略微加快攻击频率，可破开更硬的岩层。"
+base_value = 8.0
+max_value = 96.0
+increment = 8.0
+base_cost = 60
+cost_growth = 1.55
+decimals = 0
+unit = " 伤害"

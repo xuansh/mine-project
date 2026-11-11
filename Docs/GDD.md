@@ -360,3 +360,4 @@
 | 2026-11-11 | v0.2 | 挖掘改为"按 `attack_interval` 攻击矿石、扣 `Oredata.hp` 到 0 才清格"，挖完打印/发出掉落价值；新增 `attack` / `attack_interval` 数值与矿表掉落价值列 | — |
 | 2026-11-11 | v0.3 | 落地金币系统：`Oredata.value`（单格金币 = `drop × value`）、`Game.coins` + `coins_changed` 信号、左上角金币 HUD | — |
 | 2026-11-11 | v0.3 | 挖掘机改为点击生成：点击右侧发光小球附近 → 吸附最近小球 → 在该点实例化挖掘机并自动朝矿区推进；场景内预置挖掘机移除 | — |
+| 2026-11-11 | v0.4 | 落地 2D 升级面板（`Scenes/UI/upgrade_panel.tscn`）：钻头 / 油箱 / 货舱 / 引擎四组改装，等级与扣款接入 `Game` 单例，定义走 `Resources/Upgrades/*.tres`，成本曲线 `base × 1.55^n`；实体侧读取升级加成、货舱字段仍待接入 | — |
