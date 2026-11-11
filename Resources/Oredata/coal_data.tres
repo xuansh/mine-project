@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Oredata" format=3 uid="uid://bydn47xxr7bbr"]
+
+[ext_resource type="Script" uid="uid://ddn80oyrdipi" path="res://Resources/Oredata/oredata.gd" id="1_vyprc"]
+
+[resource]
+script = ExtResource("1_vyprc")
+ore_name = "coal"
+hp = 10.0
+drop = 5.0
+metadata/_custom_type_script = "uid://ddn80oyrdipi"

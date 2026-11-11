@@ -4,8 +4,8 @@
 [ext_resource type="Environment" uid="uid://di8yeo0ht4ldw" path="res://Assets/Environments/mine_soft.tres" id="1_34eps"]
 [ext_resource type="Script" uid="uid://ckncg6l32af8o" path="res://Scenes/Camera/camera_3d.gd" id="2_6lt4f"]
 [ext_resource type="MeshLibrary" uid="uid://2mel1vqw41eu" path="res://Resources/ore_map.meshlib" id="3_s31g4"]
-[ext_resource type="PackedScene" uid="uid://d3q0dk5rs83tc" path="res://Scenes/MineableEntity/basic_mini_excavator.tscn" id="6_6lt4f"]
-[ext_resource type="Material" path="res://Resources/Materials/ground_rock.tres" id="10_ground"]
+[ext_resource type="Material" uid="uid://b0yqcvkri2v3k" path="res://Resources/Materials/ground_rock.tres" id="10_ground"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/coin_hud.tscn" id="7_hud"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_6le5l"]
 vertices = PackedVector3Array(-24.5, 1, -26.84082, -24.5, 1, 24.40918, 28.75, 0.75, 24.40918, 28.75, 0.75, -26.84082)
@@ -13,9 +13,18 @@ polygons = [PackedInt32Array(3, 2, 0), PackedInt32Array(0, 2, 1)]
 agent_max_climb = 258.83
 agent_max_slope = 72.57
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_34eps"]
+emission_enabled = true
+emission = Color(0.59570175, 0, 0.10057377, 1)
+emission_energy_multiplier = 16.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_6le5l"]
+size = Vector3(0.1640625, 0.045776367, 50.413734)
+
 [node name="Node3D" type="Node3D" unique_id=1873184113 node_paths=PackedStringArray("gridmap")]
 script = ExtResource("1_6lt4f")
 gridmap = NodePath("BackgroundRegion3D/CSGGround/GridMap")
+qiu_offset = 1.5
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2052262455]
 environment = ExtResource("1_34eps")
@@ -33,10 +42,15 @@ material = ExtResource("10_ground")
 mesh_library = ExtResource("3_s31g4")
 
 [node name="CSGGround2" type="CSGBox3D" parent="BackgroundRegion3D" unique_id=1958166740]
-transform = Transform3D(0.999, 0, 0, 0, 0.999, 0, 0, 0, 0.999, 27, 0, -1.1794834)
+transform = Transform3D(0.999, 0, 0, 0, 0.999, 0, 0, 0, 0.999, 27, 0, -1.1673496)
 use_collision = true
-size = Vector3(4.6904297, 1, 52.36133)
+size = Vector3(4.6904297, 1, 52.38562)
 material = ExtResource("10_ground")
+
+[node name="用于放置挖掘机的线" type="MeshInstance3D" parent="BackgroundRegion3D/CSGGround2" unique_id=2031715830]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6253586, 0.527332, -0.24016154)
+material_override = SubResource("StandardMaterial3D_34eps")
+mesh = SubResource("BoxMesh_6le5l")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1904077215]
 transform = Transform3D(0.7071068, -0.3535534, 0.6123724, 0, 0.8660254, 0.5, -0.7071068, -0.3535534, 0.6123724, 42.87, 35.5, 41.67)
@@ -44,12 +58,8 @@ projection = 1
 size = 40.0
 script = ExtResource("2_6lt4f")
 
-[node name="CharacterBody3D" parent="." unique_id=1455790257 instance=ExtResource("6_6lt4f")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0, 0)
-
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1725226773]
 transform = Transform3D(0.7071068, 0.485, -0.5148, 0, 0.7276, 0.686, 0.7071068, -0.485, 0.5148, -25.7, 34.3, 25.7)
-light_color = Color(1, 0.886275, 0.721569, 1)
 light_energy = 1.5
 shadow_enabled = true
 shadow_blur = 2.0
@@ -59,3 +69,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 8, -18)
 light_color = Color(0.431373, 0.541176, 0.682353, 1)
 light_energy = 0.6
 omni_range = 30.0
+
+[node name="CoinHUD" parent="." instance=ExtResource("7_hud")]

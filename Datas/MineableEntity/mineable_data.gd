@@ -10,5 +10,11 @@ extends Resource
 ## 移动速度
 @export var speed : float
 
+## 攻击力：每次攻击对矿石造成的伤害
+@export var attack : float
+
+## 攻击间隔（秒）：挖矿时每隔这么久打一下矿石。0 或负数时用代码里的默认值 0.8
+@export var attack_interval : float = 0.8
+
 ## 旋转速度
 const rotate_speed : float = 0.02
