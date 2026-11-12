@@ -22,6 +22,16 @@ const CARGO_MAX_PLACEHOLDER := 20
 @onready var _lv_label : Label = %LvLabel
 @onready var _xp_bar : HudSegmentBar = %XpBar
 
+## 左栏地球小窗：CRT 开关机动画的操作对象（GDD 4.12）
+@onready var _earth_view : Control = %EarthView
+@onready var _earth_screen : Control = %SubViewportContainer
+@onready var _earth_viewport : SubViewport = %SubViewport
+@onready var _earth_caption : Control = %EarthCaption
+@onready var _no_signal : Control = %NoSignal
+@onready var _crt_flash : ColorRect = %CrtFlash
+
+var _crt_tween : Tween
+
 var _excavator : MineableEntity
 var _spawn_x : float = 0.0
 var _income : float = 0.0
@@ -52,6 +62,89 @@ func _ready() -> void:
 	_cargo_bar.set_values(0.0, float(_cargo_max))
 
 	%BtnSkill.pressed.connect(func() -> void: action_requested.emit(&"skill_tree"))
+	%BtnExit.pressed.connect(func() -> void: action_requested.emit(&"exit_mine"))
+
+# ---------------------------------------------------------------- 左栏地球小窗（GDD 4.12）
+
+## 「退」按钮只在矿场里显示（在地球全景时本来就在外面了）
+func set_exit_visible(on : bool) -> void:
+	%BtnExit.visible = on
+
+## 瞬切小窗状态（启动时用）。不播动画，避免第一帧先亮再关
+func set_earth_crt_immediate(power_on : bool) -> void:
+	if _crt_tween != null and _crt_tween.is_valid():
+		_crt_tween.kill()
+	if not is_node_ready():
+		return
+	_earth_screen.visible = power_on
+	_earth_screen.scale = Vector2.ONE
+	_earth_caption.visible = power_on
+	_earth_caption.modulate.a = 1.0
+	# 关机后屏幕显示"无信号"雪花，而不是一片空
+	_no_signal.visible = not power_on
+	_no_signal.scale = Vector2.ONE
+	_no_signal.modulate.a = 1.0
+	_crt_flash.modulate.a = 0.0
+	_set_earth_rendering(power_on)
+
+## 小窗关掉时停掉地球 SubViewport 的渲染，别让一颗看不见的星球继续吃 GPU
+func _set_earth_rendering(on : bool) -> void:
+	_earth_viewport.render_target_update_mode = \
+		SubViewport.UPDATE_ALWAYS if on else SubViewport.UPDATE_DISABLED
+
+## 古早电视关机 / 开机：纵向先压成一条亮线，再横向收成一个点，
+## 关机后接通"无信号"雪花屏；开机则反过来，从一条亮线展开成地球。
+## 时长刻意压到 0.2~0.3 秒——这两个视图会被频繁来回切，动画拖长就烦
+func play_earth_crt(power_on : bool) -> void:
+	if not is_node_ready():
+		return
+	if _crt_tween != null and _crt_tween.is_valid():
+		_crt_tween.kill()
+
+	# 收缩必须围绕屏幕中心，否则会往左上角缩
+	var screen_size := _earth_screen.size
+	if screen_size.x <= 0.0 or screen_size.y <= 0.0:
+		screen_size = _earth_view.size
+	_earth_screen.pivot_offset = screen_size * 0.5
+	_no_signal.pivot_offset = screen_size * 0.5
+
+	_crt_tween = create_tween()
+	_crt_tween.set_trans(Tween.TRANS_QUAD)
+
+	if power_on:
+		# 先让雪花噪点闪掉，再从一条亮线展开
+		_crt_tween.tween_property(_no_signal, "modulate:a", 0.0, 0.05)
+		_crt_tween.tween_callback(func() -> void:
+			_no_signal.visible = false
+			_earth_screen.visible = true
+			_earth_screen.scale = Vector2(0.02, 0.035)
+			_earth_caption.visible = true
+			_earth_caption.modulate.a = 0.0
+			_crt_flash.modulate.a = 0.85
+			_set_earth_rendering(true))
+		_crt_tween.tween_property(_earth_screen, "scale", Vector2(1.0, 0.035), 0.08)
+		_crt_tween.tween_property(_earth_screen, "scale", Vector2.ONE, 0.11) \
+			.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		_crt_tween.parallel().tween_property(_crt_flash, "modulate:a", 0.0, 0.14)
+		_crt_tween.parallel().tween_property(_earth_caption, "modulate:a", 1.0, 0.16)
+	else:
+		_crt_flash.modulate.a = 0.0
+		_crt_tween.tween_property(_crt_flash, "modulate:a", 0.9, 0.07)
+		_crt_tween.parallel().tween_property(_earth_screen, "scale", Vector2(1.0, 0.035), 0.14) \
+			.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+		_crt_tween.parallel().tween_property(_earth_caption, "modulate:a", 0.0, 0.10)
+		_crt_tween.tween_property(_earth_screen, "scale", Vector2(0.02, 0.035), 0.07)
+		_crt_tween.parallel().tween_property(_crt_flash, "modulate:a", 0.0, 0.10)
+		_crt_tween.tween_callback(func() -> void:
+			_earth_screen.visible = false
+			_earth_caption.visible = false
+			_set_earth_rendering(false)
+			# 画面收成一个点之后，雪花"啪"地一下铺满：接上没有信号的死频道
+			_no_signal.visible = true
+			_no_signal.modulate.a = 1.0
+			_no_signal.scale = Vector2(1.0, 0.10))
+		_crt_tween.tween_property(_no_signal, "scale", Vector2.ONE, 0.09) \
+			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 ## 把 font 递归灌给每一个文字控件（Label / Button / RichTextLabel 都吃 "font" 这个主题项）。
 ## 只改字形不动 font_size，各控件原有的字号设置保持不变。

@@ -13,8 +13,8 @@ config_version=5
 config/name="Mine-project"
 run/main_scene="uid://0mwhc64nggdg"
 config/features=PackedStringArray("4.7", "Mobile")
-config/icon="res://icon.svg"
 run/max_fps=120
+config/icon="res://icon.svg"
 
 [autoload]
 
@@ -28,10 +28,13 @@ window/size/viewport_height=1080
 window/size/mode=3
 window/size/window_width_override=1152
 window/size/window_height_override=648
-window/hdr/request_hdr_output=false
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 window/stretch/scale_mode="integer"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/skill_tree_editor/plugin.cfg")
 
 [file_customization]
 
@@ -85,10 +88,7 @@ Toggle-SkillTree={
 textures/canvas_textures/default_texture_filter=0
 textures/canvas_textures/default_texture_repeat=2
 rendering_device/driver.windows="d3d12"
-lights_and_shadows/directional_shadow/soft_shadow_filter_quality=2
 lights_and_shadows/directional_shadow/soft_shadow_filter_quality.mobile=2
-lights_and_shadows/positional_shadow/soft_shadow_filter_quality=2
 lights_and_shadows/positional_shadow/soft_shadow_filter_quality.mobile=2
-viewport/hdr_2d=false
 2d/snap/snap_2d_transforms_to_pixel=true
 2d/snap/snap_2d_vertices_to_pixel=true

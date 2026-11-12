@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="LocationDefinition" format=3]
+
+[ext_resource type="Script" path="res://Datas/Locations/location_definition.gd" id="1_loc"]
+
+[resource]
+script = ExtResource("1_loc")
+id = &"pit_01"
+display_name = "矿场 1 号"
+sub_label = "PIT01 · 一号坑"
+surface_dir = Vector3(0.34, 0.12, 0.93)
+surface_radius = 0.52
+target_view = &"mine"

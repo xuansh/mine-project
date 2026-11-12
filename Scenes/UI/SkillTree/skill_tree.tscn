@@ -130,9 +130,9 @@ tree_data = ExtResource("3_data")
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
-offset_left = 26.0
+offset_left = 43.0
 offset_top = 34.0
-offset_right = -26.0
+offset_right = -75.0
 offset_bottom = 82.0
 grow_horizontal = 2
 theme_override_constants/separation = 10
@@ -208,12 +208,12 @@ text = "ESC 断开"
 layout_mode = 1
 anchors_preset = -1
 anchor_bottom = 1.0
-offset_left = 26.0
+offset_left = 44.0
 offset_top = 84.0
-offset_right = 258.0
+offset_right = 276.0
 offset_bottom = -52.0
 grow_vertical = 2
-theme_override_constants/separation = 3
+theme_override_constants/separation = 7
 
 [node name="SectionLabel" type="Label" parent="IndexPanel" unique_id=1698626800]
 layout_mode = 2
@@ -247,6 +247,7 @@ text = "机器：RIG-01 · 一号机
 [node name="TreeArea" type="Control" parent="." unique_id=1084112692]
 unique_name_in_owner = true
 layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 274.0
@@ -364,7 +365,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_detail")
 
 [node name="Content" type="VBoxContainer" parent="DetailPanel" unique_id=2045969308]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 8
 
 [node name="StatusLabel" type="Label" parent="DetailPanel/Content" unique_id=334839060]
 unique_name_in_owner = true
@@ -383,18 +384,19 @@ theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 28
 text = "挖掘核心"
 
+[node name="Divider" type="ColorRect" parent="DetailPanel/Content" unique_id=550888365]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+offset_transform_enabled = true
+mouse_filter = 2
+color = Color(0.164706, 0.141176, 0.219608, 1)
+
 [node name="EffectLabel" type="Label" parent="DetailPanel/Content" unique_id=604870225]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85098, 0.635294, 0.152941, 1)
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 18
 text = "解锁后续改装分支"
-
-[node name="Divider" type="ColorRect" parent="DetailPanel/Content" unique_id=550888365]
-custom_minimum_size = Vector2(0, 2)
-layout_mode = 2
-mouse_filter = 2
-color = Color(0.164706, 0.141176, 0.219608, 1)
 
 [node name="DescLabel" type="Label" parent="DetailPanel/Content" unique_id=627822546]
 unique_name_in_owner = true
@@ -404,7 +406,7 @@ offset_transform_enabled = true
 offset_transform_position = Vector2(0, 10)
 theme_override_colors/font_color = Color(0.654902, 0.611765, 0.494118, 1)
 theme_override_constants/line_spacing = 4
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 14
 text = "整棵改装树的起点。动力、液压与电控都从这颗核心分配出去。"
 autowrap_mode = 2
 

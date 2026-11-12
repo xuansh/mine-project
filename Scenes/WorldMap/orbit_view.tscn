@@ -1,0 +1,26 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Scenes/WorldMap/orbit_view.gd" id="1_orbit"]
+[ext_resource type="PackedScene" uid="uid://db0q7iq02fd3h" path="res://Scenes/Planets/earth.tscn" id="2_earth"]
+
+[node name="OrbitView" type="Node3D"]
+script = ExtResource("1_orbit")
+
+[node name="Earth" parent="." instance=ExtResource("2_earth")]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.2)
+projection = 1
+current = true
+size = 2.2
+
+[node name="Labels" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="Markers" type="Control" parent="Labels"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

@@ -38,10 +38,19 @@ func _run_all() -> void:
 	if saver != null:
 		saver.autosave_enabled = false
 
+	# 用自带的测试树，不依赖 basic_skill_tree.tres 的实际内容——
+	# 玩家/策划随时会改那棵树，自检不该因此变红
+	var original_tree : SkillTreeData = game.skill_tree_data
+	game.skill_tree_data = _make_test_tree()
+
 	_test_aggregation(game)
 	_test_no_pollution(game)
+	_test_ore_value_flat()
 	_test_unlock_rules(game)
+	_test_reset(game)
 	_test_save_roundtrip(game)
+
+	game.skill_tree_data = original_tree
 
 	print("")
 	if _failed == 0:
@@ -50,6 +59,40 @@ func _run_all() -> void:
 	else:
 		printerr("[FAIL] 共 %d 项不通过" % _failed)
 		quit(1)
+
+# ---------------------------------------------------------------- 测试用技能树
+
+## 固定形状的最小树，覆盖 pct / flat / flag 三种键与父子关系：
+## root → drill_attack → drill_frequency
+##      → excavator_speed → gearbox
+##      → fuel_tank → dual_fuel_line
+##      → cargo_bay
+func _make_test_tree() -> SkillTreeData:
+	var tree := SkillTreeData.new()
+	tree.root_id = &"root"
+	_add_node(tree, &"root", &"core", 1.0, 0, [&"drill_attack", &"excavator_speed", &"fuel_tank", &"cargo_bay"])
+	_add_node(tree, &"drill_attack", &"attack", 0.15, 80, [&"drill_frequency"])
+	_add_node(tree, &"drill_frequency", &"attack_interval", 0.15, 120, [])
+	_add_node(tree, &"excavator_speed", &"excavator_speed", 0.10, 100, [&"gearbox"])
+	_add_node(tree, &"gearbox", &"excavator_speed", 0.15, 160, [])
+	_add_node(tree, &"fuel_tank", &"fuel_max", 40.0, 120, [&"dual_fuel_line"])
+	_add_node(tree, &"dual_fuel_line", &"fuel_burn", 0.15, 180, [])
+	_add_node(tree, &"cargo_bay", &"cargo_max", 10.0, 100, [])
+	return tree
+
+func _add_node(tree : SkillTreeData, id : StringName, key : StringName, value : float,
+		cost : int, children : Array) -> void:
+	var node := SkillNodeData.new()
+	node.id = id
+	node.title = String(id)
+	node.effect_key = key
+	node.effect_value = value
+	node.cost = cost
+	var kids : Array[StringName] = []
+	for child in children:
+		kids.append(StringName(child))
+	node.children = kids
+	tree.nodes.append(node)
 
 # ---------------------------------------------------------------- 1 聚合
 
@@ -102,7 +145,39 @@ func _test_no_pollution(game) -> void:
 		return
 	_pass("apply_to 返回副本，源 .tres 未被改写")
 
-# ---------------------------------------------------------------- 4 解锁规则
+# ---------------------------------------------------------------- 2.5 矿石价值固定加成
+
+## ore_value_flat 走 flat 分流，并且不进 MineableData（结算时由实体直接读）
+func _test_ore_value_flat() -> void:
+	var mods := SkillModifiers.new()
+	mods.add_by_key(&"ore_value_flat", 3.0)
+	mods.add_by_key(&"ore_value_flat", 2.0)   # 同键应累加
+	mods.add_by_key(&"ore_value", 0.2)        # 百分比键不能串到 flat 里
+
+	if not is_equal_approx(mods.get_flat(&"ore_value_flat"), 5.0):
+		_fail("ore_value_flat 累加结果 %.2f，应为 5.00" % mods.get_flat(&"ore_value_flat"))
+		return
+	if not is_zero_approx(mods.get_pct(&"ore_value_flat")):
+		_fail("ore_value_flat 被错分到百分比表")
+		return
+
+	# 结算口径：unit = 单价 + flat，total = drop × unit × (1 + pct)
+	var drop : float = 3.0
+	var unit : float = 6.0 + mods.get_flat(&"ore_value_flat")
+	var total : float = drop * unit * (1.0 + mods.get_pct(&"ore_value"))
+	if not is_equal_approx(total, 39.6):
+		_fail("结算值 %.2f，应为 39.60（3 × 11 × 1.2）" % total)
+		return
+
+	# 该键没有对应的 MineableData 字段，apply_to 不应因此崩或改写别的字段
+	var copy : MineableData = mods.apply_to(SOURCE)
+	if copy == null or not is_equal_approx(copy.attack, SOURCE.attack):
+		_fail("ore_value_flat 存在时 apply_to 结果异常")
+		return
+
+	_pass("ore_value_flat：累加 5、不串 pct、结算 3×11×1.2=39.60")
+
+# ---------------------------------------------------------------- 3 解锁规则
 
 func _test_unlock_rules(game) -> void:
 	game.unlocked_skills = _ids([&"root"])
@@ -131,6 +206,36 @@ func _test_unlock_rules(game) -> void:
 		_fail("重复解锁未被拦住")
 		return
 	_pass("解锁校验（父节点 / 金币 / 扣费 / 防重复）全部正确")
+
+# ---------------------------------------------------------------- 5 复位改装
+
+## 复位 = 清空到只剩根节点 + 按节点 cost 全额退款，且不留残余加成
+func _test_reset(game) -> void:
+	var two : Array[StringName] = _ids([&"root", &"drill_attack", &"drill_frequency"])
+	game.unlocked_skills = two
+	game.coins = 100
+
+	var expected : int = game.get_skill_cost(&"drill_attack") + game.get_skill_cost(&"drill_frequency")
+	var refund : int = game.reset_skills()
+
+	if refund != expected:
+		_fail("退款金额 %d，期望 %d" % [refund, expected])
+		return
+	if game.coins != 100 + expected:
+		_fail("复位后金币 %d，期望 %d" % [game.coins, 100 + expected])
+		return
+	if game.unlocked_skills.size() != 1 or not game.is_skill_unlocked(&"root"):
+		_fail("复位后解锁集合应只剩 root，实际 %s" % str(game.unlocked_skills))
+		return
+	# 只剩根节点（effect_key = core，纯开关）时数值加成必须清零。
+	# 注意不能拿 is_empty() 判：root 会留下一个 core 开关，集合本身非空
+	var mods = game.get_modifiers()
+	if not is_zero_approx(mods.get_pct(&"attack")) \
+			or not is_zero_approx(mods.get_pct(&"attack_interval")) \
+			or not is_zero_approx(mods.get_flat(&"cargo_max")):
+		_fail("复位后仍残留数值加成")
+		return
+	_pass("复位改装：退款 %d、只留根节点、数值加成清零" % refund)
 
 # ---------------------------------------------------------------- 4 存档往返
 

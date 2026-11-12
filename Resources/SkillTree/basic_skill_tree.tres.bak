@@ -1,0 +1,50 @@
+[gd_resource type="Resource" script_class="SkillTreeData" format=3 uid="uid://crhuayu85v5k2"]
+
+[ext_resource type="Script" uid="uid://bv7lwwrobx587" path="res://Resources/SkillTree/skill_node_data.gd" id="1_jj00i"]
+[ext_resource type="Script" uid="uid://cdqa5hqb7n64d" path="res://Resources/SkillTree/skill_tree_data.gd" id="2_lqyal"]
+
+[sub_resource type="Resource" id="Resource_jj00i"]
+script = ExtResource("1_jj00i")
+id = &"root"
+title = "机械核心"
+effect_key = &"core"
+effect_value = 1.0
+shape = 1
+children = Array[StringName]([&"income"])
+metadata/_custom_type_script = "uid://bv7lwwrobx587"
+
+[sub_resource type="Resource" id="Resource_lqyal"]
+script = ExtResource("1_jj00i")
+id = &"income"
+title = "收入"
+effect_key = &"ore_value_flat"
+effect_value = 4.0
+effect_text = "铜矿矿石价值 +4"
+cost = 20
+shape = 1
+position = Vector2(-125.865005, -125.865005)
+children = Array[StringName]([&"incomeBoost", &"oreRichnessRate"])
+
+[sub_resource type="Resource" id="Resource_l5kd4"]
+script = ExtResource("1_jj00i")
+id = &"incomeBoost"
+title = "收入提升"
+effect_key = &"ore_value"
+effect_value = 0.15
+cost = 50
+position = Vector2(-263.38278, -100.76457)
+
+[sub_resource type="Resource" id="Resource_7xnfn"]
+script = ExtResource("1_jj00i")
+id = &"oreRichnessRate"
+title = "富矿率"
+effect_key = &"excavator_speed"
+effect_value = 0.15
+effect_text = "提高每个矿石能挖到富矿的概率"
+cost = 50
+shape = 1
+position = Vector2(-100.76457, -263.38278)
+
+[resource]
+script = ExtResource("2_lqyal")
+nodes = Array[ExtResource("1_jj00i")]([SubResource("Resource_jj00i"), SubResource("Resource_lqyal"), SubResource("Resource_l5kd4"), SubResource("Resource_7xnfn")])

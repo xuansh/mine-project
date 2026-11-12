@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://cpoopa1cul2t" path="res://Scenes/UI/hud_segment_bar.gd" id="2_bar"]
 [ext_resource type="FontFile" uid="uid://dc53gr162sfom" path="res://Assets/Fonts/ChangBanDianSong-16-SC.ttf" id="2_q3om7"]
 [ext_resource type="PackedScene" uid="uid://db0q7iq02fd3h" path="res://Scenes/Planets/earth.tscn" id="3_2pg1r"]
+[ext_resource type="Shader" uid="uid://q2uq1f872b4s" path="res://Shaders/crt_static.gdshader" id="4_static"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 content_margin_left = 10.0
@@ -18,6 +19,15 @@ border_width_bottom = 2
 border_color = Color(0.431373, 0.407843, 0.517647, 1)
 shadow_color = Color(0.133333, 0.109804, 0.188235, 1)
 shadow_size = 2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_static"]
+shader = ExtResource("4_static")
+shader_parameter/base_color = Color(0.047, 0.043, 0.063, 1)
+shader_parameter/noise_color = Color(0.376, 0.361, 0.435, 1)
+shader_parameter/spark_color = Color(0.851, 0.635, 0.153, 1)
+shader_parameter/density = 260.0
+shader_parameter/flicker_speed = 24.0
+shader_parameter/noise_strength = 0.55
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_chip"]
 content_margin_left = 8.0
@@ -108,12 +118,14 @@ layout_mode = 2
 theme_override_constants/separation = 6
 
 [node name="EarthView" type="Control" parent="PlanetPanel/Body" unique_id=1031205190]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 184)
 clip_contents = true
 layout_mode = 2
 mouse_filter = 2
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="PlanetPanel/Body/EarthView" unique_id=1711220345]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -123,6 +135,7 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="SubViewport" type="SubViewport" parent="PlanetPanel/Body/EarthView/SubViewportContainer" unique_id=1689887661]
+unique_name_in_owner = true
 own_world_3d = true
 handle_input_locally = false
 size = Vector2i(512, 190)
@@ -130,7 +143,19 @@ render_target_update_mode = 4
 
 [node name="Earth" parent="PlanetPanel/Body/EarthView/SubViewportContainer/SubViewport" unique_id=264228363 instance=ExtResource("3_2pg1r")]
 
+[node name="NoSignal" type="ColorRect" parent="PlanetPanel/Body/EarthView" unique_id=1094134213]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_static")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
 [node name="EarthCaption" type="CenterContainer" parent="PlanetPanel/Body/EarthView" unique_id=1995314028]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.002
@@ -152,6 +177,18 @@ theme_override_constants/shadow_offset_x = 1
 theme_override_constants/shadow_offset_y = 1
 theme_override_font_sizes/font_size = 30
 text = "地球"
+
+[node name="CrtFlash" type="ColorRect" parent="PlanetPanel/Body/EarthView" unique_id=1370492211]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.937255, 0.964706, 1, 1)
 
 [node name="PlayerPanel" type="PanelContainer" parent="." unique_id=1712856592]
 layout_mode = 0
@@ -453,11 +490,25 @@ anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 24.0
-offset_top = -172.0
+offset_top = -224.0
 offset_right = 72.0
 offset_bottom = -24.0
 grow_vertical = 0
 theme_override_constants/separation = 8
+
+[node name="BtnExit" type="Button" parent="ActionButtons" unique_id=1044013549]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.941176, 0.933333, 0.894118, 1)
+theme_override_colors/font_pressed_color = Color(0.85098, 0.635294, 0.152941, 1)
+theme_override_colors/font_hover_color = Color(0.85098, 0.635294, 0.152941, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_btn_disabled")
+text = "退"
 
 [node name="BtnSkill" type="Button" parent="ActionButtons" unique_id=1044056216]
 unique_name_in_owner = true

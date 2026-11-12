@@ -45,6 +45,12 @@ var _selected_id : StringName = &""
 var _fade_tween : Tween
 var _blink_time : float = 0.0
 
+## 状态栏一行会临时改成操作反馈（复位 / 余额不足），到点自动还原
+const PROMPT_DEFAULT : String = "> 选择节点以查看改装详情"
+const PROMPT_RESET_HINT : String = "> 选择节点以查看改装详情 · SHIFT+R 复位改装"
+var _prompt_default : String = PROMPT_DEFAULT
+var _prompt_until : int = 0
+
 ## 分支索引：head 节点（root 的直接子节点）顺序即分支顺序
 class BranchRow:
 	var head_id : StringName
@@ -72,6 +78,7 @@ var _branch_rows : Array[BranchRow] = []
 @onready var _balance_top : Label = %BalanceValue
 @onready var _node_top : Label = %NodeValue
 @onready var _cursor_rect : ColorRect = %CursorRect
+@onready var _prompt_label : Label = $StatusBar/PromptLabel
 @onready var _balance_value : Label = $DetailPanel/Content/Meta/BalanceRow/BalanceValue
 
 func _ready() -> void:
@@ -93,11 +100,28 @@ func _ready() -> void:
 	Game.coins_changed.connect(_on_coins_changed)
 	_select(tree_data.root_id)
 
+	# 复位快捷键只在 debug 构建里存在：正式包不给提示，也不响应按键
+	_prompt_default = PROMPT_RESET_HINT if OS.is_debug_build() else PROMPT_DEFAULT
+	_prompt_label.text = _prompt_default
+
 func _process(delta : float) -> void:
 	# 光标 █ 0.5 秒闪烁（GDD 4.10.6），steps 硬切不渐变
 	_blink_time += delta
 	if _cursor_rect != null:
 		_cursor_rect.visible = fmod(_blink_time, 1.0) < 0.5
+
+	# 操作反馈到点还原
+	if _prompt_until > 0 and Time.get_ticks_msec() >= _prompt_until:
+		_prompt_until = 0
+		_prompt_label.text = _prompt_default
+		_prompt_label.add_theme_color_override("font_color", COLOR_MUTED)
+
+## 调试用：复位改装并把退款金额打到状态栏。
+## 按键本身在 control.gd 的 _unhandled_input 里（终端在 SubViewport 内，收不到窗口级按键）
+func debug_reset_skills() -> void:
+	var refund := Game.reset_skills()
+	_refresh_states()
+	_set_prompt("已复位改装 · 退回 %s 金币" % _format_coins(refund), COLOR_AMBER, 2.5)
 
 # ---------------------------------------------------------------- 开关
 
@@ -400,6 +424,12 @@ func _update_top_stats() -> void:
 func _set_status(text : String, color : Color) -> void:
 	_status_label.text = text
 	_status_label.add_theme_color_override("font_color", color)
+
+## 状态栏临时提示。hold 秒后自动回到默认提示
+func _set_prompt(text : String, color : Color, hold : float) -> void:
+	_prompt_label.text = text
+	_prompt_label.add_theme_color_override("font_color", color)
+	_prompt_until = Time.get_ticks_msec() + int(hold * 1000.0)
 
 ## 按钮正文 + 右侧费用。费用压在按钮上而不是元信息行里——这是玩家唯一要看的数
 ## deficit > 0 时在费用下补一行「还差 N」

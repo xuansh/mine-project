@@ -16,8 +16,10 @@ var _flat : Dictionary[StringName, float] = {}
 var _flags : Dictionary[StringName, bool] = {}
 
 ## 走固定值加算的键（fuel_max / cargo_max 是绝对值加成，不是百分比）
+## ore_value_flat 是「每格矿石价值 +N 金币」：它不改 MineableData，
+## 由 MineableEntity 结算时直接读 get_flat()，所以这里只需要登记分流
 static func is_flat_key(key : StringName) -> bool:
-	return key == &"fuel_max" or key == &"cargo_max"
+	return key == &"fuel_max" or key == &"cargo_max" or key == &"ore_value_flat"
 
 ## 只有开关语义、没有数值的键
 static func is_flag_key(key : StringName) -> bool:

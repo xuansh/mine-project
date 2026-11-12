@@ -13,11 +13,15 @@ signal drop_gained(ore_name : String, value : float)
 ## 燃油变化时发出（当前 / 上限），以后接 HUD 油条直接连这里
 signal fuel_changed(current : float, max_fuel : float)
 
-## 燃油耗尽时发出。发出后这台机器会 queue_free 消失（临时表现）
+## 燃油耗尽时发出。发出后这台机器会 queue_free 消失（GDD 4.11.3 报废）
 signal fuel_empty
 
 ## 货舱装载变化时发出（当前装载 / 容量）
 signal cargo_changed(current : int, capacity : int)
+
+## 这一行走完了：前方无矿且已越出场地包围盒（GDD 4.11 回收判定）。
+## 只发一次，MineField 靠它把机器自动回收到底栏
+signal row_finished
 
 enum State { MOVING, MINING }
 
@@ -40,6 +44,10 @@ const TOUGH_ORE_HP : float = 18.0
 
 ## 前进方向（世界坐标）
 @export var forward_dir : Vector3 = Vector3(-1, 0, 0)
+
+## 场地包围盒（x/z，MineField 生成格子后塞进来）。
+## 没配置（size 为 0）时不做边界判定，保持旧行为
+@export var field_bounds : Rect2i = Rect2i()
 
 ## 车头前方多远开始判定“有矿”。不要大于一个格子的边长，否则会隔着格子挖
 @export var probe_distance : float = 1.8
@@ -67,6 +75,9 @@ var _fuel : float = 0.0
 var _fuel_max : float = 0.0
 ## 油烧完后置 true，避免同一帧里继续跑状态机或重复触发死亡
 var _is_dead : bool = false
+
+## row_finished 只发一次的护栏
+var _row_finished_emitted : bool = false
 
 func _ready() -> void:
 	_mods = Game.get_modifiers()
@@ -135,7 +146,8 @@ func _die() -> void:
 	velocity = Vector3.ZERO
 	_target_ore = null
 	fuel_empty.emit()
-	print("[燃油] 耗尽，挖掘机消失")
+	# GDD 4.11.3：油耗尽机器直接报废销毁，MineField 收到信号后同步移除库存条目
+	print("[燃油] 耗尽，挖掘机报废")
 	queue_free()
 
 ## 当前油量 / 上限 / 剩余比例（0~1），以后接 HUD 可以直接读
@@ -161,6 +173,16 @@ func _process_moving(delta : float) -> void:
 		var cell_ahead : Vector3i = _cell_ahead(direction)
 		if gridmap.get_cell_item(cell_ahead) != GridMap.INVALID_CELL_ITEM:
 			_start_mining(cell_ahead)
+			return
+
+		# 前方没有矿、又已经出了场地包围盒：这一行走到头了（GDD 4.11）。
+		# 停在这里并通知 MineField 回收，不再空转烧油
+		if _reached_field_edge(cell_ahead):
+			velocity = Vector3.ZERO
+			move_and_slide()
+			if not _row_finished_emitted:
+				_row_finished_emitted = true
+				row_finished.emit()
 			return
 
 	var speed : float = 0.0
@@ -205,6 +227,12 @@ func _cell_ahead(direction : Vector3) -> Vector3i:
 	# 锁定在车身所在的这一层，别因为高度换算到别的 y 层
 	probe.y = global_position.y
 	return gridmap.local_to_map(gridmap.to_local(probe))
+
+## 前方格子是否已经出了场地包围盒（包围盒没配置时永远 false）
+func _reached_field_edge(cell_ahead : Vector3i) -> bool:
+	if not field_bounds.has_area():
+		return false
+	return not field_bounds.has_point(Vector2i(cell_ahead.x, cell_ahead.z))
 
 ## 查这个格子对应哪份矿石数据
 func _ore_at(cell : Vector3i) -> Oredata:
@@ -254,14 +282,23 @@ func _attack() -> void:
 	if _target_hp <= 0.0:
 		_finish_mining()
 
+## 一格矿石的结算收益：掉落数量 × (单价 + 每格固定加价) × (1 + 百分比加成)
+## ore_value_flat 先加到单价上再乘掉落数量——"每格加价"指的是每单位矿石，
+## 不是每次挖完整格只加一次。抽成公开方法是给自检和以后的结算事件用的
+func calc_ore_value(ore : Oredata) -> float:
+	if ore == null:
+		return 0.0
+	var unit_value : float = ore.value
+	if _mods != null:
+		unit_value += _mods.get_flat(&"ore_value_flat")
+	var value : float = ore.drop * maxf(unit_value, 0.0)
+	if _mods != null:
+		value *= 1.0 + _mods.get_pct(&"ore_value")
+	return value
+
 func _finish_mining() -> void:
 	var ore : Oredata = _target_ore
-	var value : float = 0.0
-	if ore != null:
-		# 一格收益 = 掉落数量 × 单价 × 「矿石精炼」加成
-		value = ore.drop * ore.value
-		if _mods != null:
-			value *= 1.0 + _mods.get_pct(&"ore_value")
+	var value : float = calc_ore_value(ore)
 
 	if gridmap != null:
 		gridmap.set_cell_item(_dig_cell, GridMap.INVALID_CELL_ITEM)

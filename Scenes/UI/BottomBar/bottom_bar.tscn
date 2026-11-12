@@ -1,0 +1,103 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Scenes/UI/BottomBar/bottom_bar.gd" id="1_bar"]
+[ext_resource type="FontFile" uid="uid://dc53gr162sfom" path="res://Assets/Fonts/ChangBanDianSong-16-SC.ttf" id="2_font"]
+[ext_resource type="Texture2D" uid="uid://k588afwbhq2s" path="res://Assets/Textures/UI_Frame_HUD.png" id="3_frame"]
+[ext_resource type="Texture2D" uid="uid://djjhdej0koyy3" path="res://Assets/Textures/basic_mini_excavator.png" id="4_icon"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_frame"]
+content_margin_left = 20.0
+content_margin_top = 16.0
+content_margin_right = 20.0
+content_margin_bottom = 14.0
+texture = ExtResource("3_frame")
+texture_margin_left = 52.0
+texture_margin_top = 52.0
+texture_margin_right = 52.0
+texture_margin_bottom = 52.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icon"]
+atlas = ExtResource("4_icon")
+region = Rect2(80, 100, 1840, 1800)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_chip"]
+content_margin_left = 8.0
+content_margin_top = 2.0
+content_margin_right = 8.0
+content_margin_bottom = 2.0
+bg_color = Color(0.070588, 0.062745, 0.101961, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.431373, 0.407843, 0.517647, 1)
+
+[node name="BottomBar" type="PanelContainer"]
+anchors_preset = -1
+anchor_right = 1.0
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 373.0
+offset_top = -278.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxTexture_frame")
+script = ExtResource("1_bar")
+font = ExtResource("2_font")
+slot_icon = SubResource("AtlasTexture_icon")
+
+[node name="Content" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="HeaderRow" type="HBoxContainer" parent="Content"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TitleChip" type="PanelContainer" parent="Content/HeaderRow"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_chip")
+
+[node name="TitleLabel" type="Label" parent="Content/HeaderRow/TitleChip"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85098, 0.635294, 0.152941, 1)
+theme_override_font_sizes/font_size = 16
+text = "持有物品"
+
+[node name="ContextLabel" type="Label" parent="Content/HeaderRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.627451, 0.596078, 0.709804, 1)
+theme_override_font_sizes/font_size = 14
+text = "——"
+
+[node name="Spacer" type="Control" parent="Content/HeaderRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="StatsLabel" type="Label" parent="Content/HeaderRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.627451, 0.596078, 0.709804, 1)
+theme_override_font_sizes/font_size = 14
+text = "在库 0 · 出勤 0"
+
+[node name="SlotScroll" type="ScrollContainer" parent="Content"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 1
+vertical_scroll_mode = 0
+
+[node name="SlotRow" type="HBoxContainer" parent="Content/SlotScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="HintLabel" type="Label" parent="Content"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.627451, 0.596078, 0.709804, 1)
+theme_override_font_sizes/font_size = 13
+text = "——"

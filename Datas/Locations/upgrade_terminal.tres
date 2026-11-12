@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="LocationDefinition" format=3]
+
+[ext_resource type="Script" path="res://Datas/Locations/location_definition.gd" id="1_loc"]
+
+[resource]
+script = ExtResource("1_loc")
+id = &"upgrade_terminal"
+display_name = "升级终端"
+sub_label = "改装机库 · 技能树"
+surface_dir = Vector3(-0.46, -0.06, 0.88)
+surface_radius = 0.52
+target_view = &"upgrade"

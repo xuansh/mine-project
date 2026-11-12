@@ -8,6 +8,10 @@ signal upgrades_changed(group : StringName, level : int)
 
 var time : float
 
+func _ready() -> void:
+	# 兜底起步机：读档在 SaveSystem._ready 里做，读到档会覆盖这里的初始状态
+	ensure_starter_excavator()
+
 ## 当前金币。UI 只读它，改金币一律走 add_coins / spend_coins
 var coins : int = 0
 
@@ -158,6 +162,30 @@ func unlock_skill(skill_id : StringName) -> bool:
 	skills_changed.emit()
 	return true
 
+## 复位改装：清空已解锁节点（只留根节点），把已花的金币原路退回。
+## 返回退回的金币数。给「换流派重走一遍」和自测用。
+## 只动改装，不动金币结余以外的进度（深度 / 等级 / 机器都保留）
+func reset_skills() -> int:
+	var keep : Array[StringName] = []
+	if skill_tree_data != null and skill_tree_data.get_node_data(skill_tree_data.root_id) != null:
+		keep.append(skill_tree_data.root_id)
+
+	var refund : int = 0
+	for skill_id in unlocked_skills:
+		if keep.has(skill_id):
+			continue
+		if skill_tree_data != null:
+			var data := skill_tree_data.get_node_data(skill_id)
+			if data != null:
+				refund += data.cost
+
+	unlocked_skills = keep
+	if refund > 0:
+		coins += refund
+		coins_changed.emit(coins, refund)
+	skills_changed.emit()
+	return refund
+
 ## 由已解锁节点聚合出加成集合。空集合时返回空对象，调用方用 is_empty() 判断
 func get_modifiers() -> SkillModifiers:
 	var mods := SkillModifiers.new()
@@ -169,6 +197,57 @@ func get_modifiers() -> SkillModifiers:
 		mods.add_by_key(node_data.effect_key, node_data.effect_value)
 	return mods
 
+# ---------------------------------------------------------------- 持有物（GDD 4.11）
+
+## 拥有的挖掘机变化时发出（入手 / 派遣 / 回库），底栏与 HUD 都挂这里
+signal excavators_changed
+
+## 首台挖掘机的数据源。同一型号共享一份 .tres，加成在生成实体时快照
+const DEFAULT_EXCAVATOR := preload("res://Resources/Excavators/basic_mini_excavator.tres")
+
+## 玩家拥有的全部挖掘机。deployed 的照旧留在数组里，UI 用状态区分「在库 / 出勤」
+var excavators : Array[ExcavatorUnit] = []
+
+## 首次游玩兜底：没有存档、或存档里一台机器都没有时，送一台起步机
+func ensure_starter_excavator() -> void:
+	if excavators.is_empty():
+		add_excavator()
+
+## 入手一台挖掘机并广播。data 缺省用起步机，名字缺省按序号生成
+func add_excavator(data : MineableData = null, display_name : String = "") -> ExcavatorUnit:
+	var unit := ExcavatorUnit.new(data if data != null else DEFAULT_EXCAVATOR, display_name)
+	if display_name == "":
+		unit.display_name = "小型挖掘机 %02d" % (excavators.size() + 1)
+	excavators.append(unit)
+	excavators_changed.emit()
+	return unit
+
+## 当前在库（可派遣）的机器
+func get_idle_excavators() -> Array[ExcavatorUnit]:
+	var idle : Array[ExcavatorUnit] = []
+	for unit in excavators:
+		if unit != null and not unit.deployed:
+			idle.append(unit)
+	return idle
+
+## 标记 deployed 并广播。派遣与回库都走这里，别直接改 unit.deployed
+func set_excavator_deployed(unit : ExcavatorUnit, value : bool) -> void:
+	if unit == null or unit.deployed == value:
+		return
+	unit.deployed = value
+	excavators_changed.emit()
+
+## 移除一台机器（燃油耗尽销毁）。库存里也要删，否则槽位会永远卡在「出勤中」
+func remove_excavator(unit : ExcavatorUnit) -> bool:
+	if unit == null:
+		return false
+	var index := excavators.find(unit)
+	if index < 0:
+		return false
+	excavators.remove_at(index)
+	excavators_changed.emit()
+	return true
+
 # ---------------------------------------------------------------- 存档
 
 ## 存档快照。只放需要跨会话保留的字段，UI 状态一律不入档
@@ -176,6 +255,10 @@ func to_dict() -> Dictionary:
 	var ids := PackedStringArray()
 	for id in unlocked_skills:
 		ids.append(String(id))
+	var exc := PackedStringArray()
+	for unit in excavators:
+		if unit != null and unit.data != null and unit.data.resource_path != "":
+			exc.append(unit.data.resource_path)
 	return {
 		"version": SAVE_VERSION,
 		"coins": coins,
@@ -184,6 +267,7 @@ func to_dict() -> Dictionary:
 		"xp_to_next": xp_to_next,
 		"best_depth": best_depth,
 		"unlocked_skills": ids,
+		"excavators": exc,
 	}
 
 ## 读档回填。缺字段一律走默认值，兼容旧档与手改坏的档
@@ -202,6 +286,17 @@ func apply_dict(data : Dictionary) -> void:
 			if skill_id != &"" and not unlocked_skills.has(skill_id):
 				unlocked_skills.append(skill_id)
 
+	# 挖掘机按资源路径重建。出勤状态不入档（GDD 4.11）：读档后全部回库
+	excavators.clear()
+	var exc = data.get("excavators", PackedStringArray())
+	if exc is PackedStringArray or exc is Array:
+		for path in exc:
+			var res := load(str(path)) as MineableData
+			add_excavator(res if res != null else DEFAULT_EXCAVATOR)
+	if excavators.is_empty():
+		ensure_starter_excavator()
+
 	coins_changed.emit(coins, 0)
 	stats_changed.emit()
 	skills_changed.emit()
+	excavators_changed.emit()
