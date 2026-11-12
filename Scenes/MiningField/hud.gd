@@ -16,6 +16,11 @@ const CARGO_MAX_PLACEHOLDER := 20
 @onready var _cargo_bar : HudSegmentBar = %CargoBar
 @onready var _cargo_label : Label = %CargoLabel
 @onready var _income_label : Label = %IncomeLabel
+@onready var _coin_cell_label : Label = %CoinCellLabel
+@onready var _skill_label : Label = %SkillLabel
+@onready var _best_label : Label = %BestLabel
+@onready var _lv_label : Label = %LvLabel
+@onready var _xp_bar : HudSegmentBar = %XpBar
 
 var _excavator : MineableEntity
 var _spawn_x : float = 0.0
@@ -41,10 +46,12 @@ func _ready() -> void:
 	Game.coins_changed.connect(_on_coins_changed)
 	_coin_label.text = _format_coins(Game.coins)
 
+	Game.stats_changed.connect(_refresh_stats)
+	_refresh_stats()
+
 	_cargo_bar.set_values(0.0, float(_cargo_max))
 
 	%BtnSkill.pressed.connect(func() -> void: action_requested.emit(&"skill_tree"))
-	%BtnUpgrade.pressed.connect(func() -> void: action_requested.emit(&"upgrade"))
 
 ## 把 font 递归灌给每一个文字控件（Label / Button / RichTextLabel 都吃 "font" 这个主题项）。
 ## 只改字形不动 font_size，各控件原有的字号设置保持不变。
@@ -65,6 +72,7 @@ func _process(_delta : float) -> void:
 		# 原型只有一层矿，深度先用「离出生点的推进距离」表达（P3 深度即进度）
 		var advanced := absf(_excavator.global_position.x - _spawn_x)
 		_depth_label.text = "%dM" % roundi(advanced)
+		Game.report_depth(advanced)
 
 # ---------------------------------------------------------------- 挖掘机数据
 
@@ -98,6 +106,16 @@ func _refresh_cargo() -> void:
 
 func _on_coins_changed(total : int, _delta : int) -> void:
 	_coin_label.text = _format_coins(total)
+	_coin_cell_label.text = _format_coins(total)
+
+# ---------------------------------------------------------------- 玩家成长
+
+func _refresh_stats() -> void:
+	_coin_cell_label.text = _format_coins(Game.coins)
+	_skill_label.text = str(Game.skill_points)
+	_best_label.text = "%dM" % roundi(Game.best_depth)
+	_lv_label.text = "LV %d" % Game.level
+	_xp_bar.set_values(float(Game.xp), float(Game.xp_to_next))
 
 func _format_coins(amount : int) -> String:
 	var digits : String = str(absi(amount))

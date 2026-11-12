@@ -4,7 +4,6 @@
 [ext_resource type="Environment" uid="uid://di8yeo0ht4ldw" path="res://Assets/Environments/mine_soft.tres" id="1_34eps"]
 [ext_resource type="Script" uid="uid://ckncg6l32af8o" path="res://Scenes/Camera/camera_3d.gd" id="2_6lt4f"]
 [ext_resource type="MeshLibrary" uid="uid://2mel1vqw41eu" path="res://Resources/ore_map.meshlib" id="3_s31g4"]
-[ext_resource type="PackedScene" path="res://Scenes/UI/upgrade_panel.tscn" id="8_up"]
 [ext_resource type="Material" uid="uid://b0yqcvkri2v3k" path="res://Resources/Materials/ground_rock.tres" id="10_ground"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_6le5l"]
@@ -71,5 +70,3 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 8, -18)
 light_color = Color(0.431373, 0.407843, 0.62, 1)
 light_energy = 0.8
 omni_range = 30.0
-
-[node name="UpgradePanel" parent="." unique_id=621329086 instance=ExtResource("8_up")]
