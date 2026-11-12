@@ -12,10 +12,11 @@ polygons = [PackedInt32Array(3, 2, 0), PackedInt32Array(0, 2, 1)]
 agent_max_climb = 258.83
 agent_max_slope = 72.57
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_34eps"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6lt4f"]
+albedo_color = Color(0, 0, 0, 1)
 emission_enabled = true
-emission = Color(0.85098, 0.635294, 0.152941, 1)
-emission_energy_multiplier = 10.0
+emission = Color(0.5674441, 0.2998227, 0.09756472, 1)
+emission_energy_multiplier = 5.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_6le5l"]
 size = Vector3(0.1640625, 0.045776367, 50.413734)
@@ -48,7 +49,7 @@ material = ExtResource("10_ground")
 
 [node name="用于放置挖掘机的线" type="MeshInstance3D" parent="BackgroundRegion3D/CSGGround2" unique_id=2031715830]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6253586, 0.527332, -0.24016154)
-material_override = SubResource("StandardMaterial3D_34eps")
+material_override = SubResource("StandardMaterial3D_6lt4f")
 mesh = SubResource("BoxMesh_6le5l")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1904077215]

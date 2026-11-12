@@ -16,6 +16,9 @@ signal fuel_changed(current : float, max_fuel : float)
 ## 燃油耗尽时发出。发出后这台机器会 queue_free 消失（临时表现）
 signal fuel_empty
 
+## 货舱装载变化时发出（当前装载 / 容量）
+signal cargo_changed(current : int, capacity : int)
+
 enum State { MOVING, MINING }
 
 ## 攻击间隔的兜底值：mineable_data 里没配时用它
@@ -23,6 +26,9 @@ const DEFAULT_ATTACK_INTERVAL : float = 0.8
 
 ## 燃油配置没填时的兜底油箱容量
 const DEFAULT_FUEL_MAX : float = 100.0
+
+## 「深孔钻」（tough_ore_damage）生效的耐久门槛：矿石 hp 达到这个值才算"高耐久"
+const TOUGH_ORE_HP : float = 18.0
 
 @export var mineable_data : MineableData
 
@@ -49,6 +55,13 @@ var _target_ore : Oredata
 var _target_hp : float = 0.0
 var _target_hp_max : float = 0.0
 
+## 应用过改装加成后的数据副本。所有数值读取都走这里，不再直接读 mineable_data
+var _data : MineableData
+## 本机的加成集合，生成时快照一份（GDD 4.10.2：改装在下一次出发时生效）
+var _mods : SkillModifiers
+## 货舱当前装载（单位）
+var _cargo : int = 0
+
 ## 当前油量 / 油箱容量
 var _fuel : float = 0.0
 var _fuel_max : float = 0.0
@@ -56,13 +69,26 @@ var _fuel_max : float = 0.0
 var _is_dead : bool = false
 
 func _ready() -> void:
-	# 油箱容量：MineableData 里配了就用手，没配就用兜底值
+	_mods = Game.get_modifiers()
+	_data = _resolve_data()
+
+	# 油箱容量：改装数据里配了就用手，没配就用兜底值
 	_fuel_max = DEFAULT_FUEL_MAX
-	if mineable_data != null and mineable_data.total_fuel > 0.0:
-		_fuel_max = mineable_data.total_fuel
+	if _data != null and _data.total_fuel > 0.0:
+		_fuel_max = _data.total_fuel
 	_fuel = _fuel_max
 
 	fuel_changed.emit(_fuel, _fuel_max)
+	cargo_changed.emit(_cargo, cargo_max())
+
+## 把技能树的加成应用到一份数据副本上（GDD 4.10.3）。
+## 不改原始 .tres：它是所有机器共享的，改它等于给每台机器叠一次加成
+func _resolve_data() -> MineableData:
+	if mineable_data == null:
+		return null
+	if _mods == null or _mods.is_empty():
+		return mineable_data
+	return _mods.apply_to(mineable_data)
 
 ## HUD 等外部 UI 初始化时读油量状态（x = 当前油量，y = 油箱容量）
 func get_fuel_state() -> Vector2:
@@ -84,12 +110,19 @@ func _physics_process(delta : float) -> void:
 			_process_mining(delta)
 
 func _burn_fuel(delta : float) -> void:
-	# 每帧从数据里取油耗：以后做"省油"升级改资源就立刻生效。
+	# 每帧从改装后的数据里取油耗：以后做"省油"升级改资源就立刻生效。
 	# <= 0 视为不耗油，避免数据没填时原地暴毙
-	if mineable_data == null or mineable_data.fuelConsumptionPerSecond <= 0.0:
+	if _data == null or _data.fuelConsumptionPerSecond <= 0.0:
 		return
 
-	_fuel = maxf(_fuel - mineable_data.fuelConsumptionPerSecond * delta, 0.0)
+	var rate : float = _data.fuelConsumptionPerSecond
+	# 「低怠速系统」只减免挖掘态油耗，跑动途中照常烧
+	if _state == State.MINING and _mods != null:
+		rate *= clampf(1.0 - _mods.get_pct(&"idle_burn"), 0.0, 1.0)
+	if rate <= 0.0:
+		return
+
+	_fuel = maxf(_fuel - rate * delta, 0.0)
 	fuel_changed.emit(_fuel, _fuel_max)
 
 	if _fuel <= 0.0:
@@ -131,8 +164,8 @@ func _process_moving(delta : float) -> void:
 			return
 
 	var speed : float = 0.0
-	if mineable_data != null:
-		speed = mineable_data.speed
+	if _data != null:
+		speed = _data.speed
 
 	velocity = lerp(velocity, direction * speed, delta * 10.0)
 
@@ -185,14 +218,18 @@ func _ore_at(cell : Vector3i) -> Oredata:
 	return ore_datas[item]
 
 func _attack_damage() -> float:
-	if mineable_data == null:
+	if _data == null:
 		return 0.0
-	return maxf(mineable_data.attack, 0.0)
+	var damage : float = maxf(_data.attack, 0.0)
+	# 「深孔钻」只对高耐久矿追加伤害，普通矿不加
+	if _mods != null and damage > 0.0 and _target_hp_max >= TOUGH_ORE_HP:
+		damage *= 1.0 + _mods.get_pct(&"tough_ore_damage")
+	return damage
 
 func _attack_interval() -> float:
 	var interval : float = DEFAULT_ATTACK_INTERVAL
-	if mineable_data != null and mineable_data.attack_interval > 0.0:
-		interval = mineable_data.attack_interval
+	if _data != null and _data.attack_interval > 0.0:
+		interval = _data.attack_interval
 	return maxf(interval, 0.05)
 
 func _start_mining(cell : Vector3i) -> void:
@@ -221,8 +258,10 @@ func _finish_mining() -> void:
 	var ore : Oredata = _target_ore
 	var value : float = 0.0
 	if ore != null:
-		# 一格收益 = 掉落数量 × 单价
+		# 一格收益 = 掉落数量 × 单价 × 「矿石精炼」加成
 		value = ore.drop * ore.value
+		if _mods != null:
+			value *= 1.0 + _mods.get_pct(&"ore_value")
 
 	if gridmap != null:
 		gridmap.set_cell_item(_dig_cell, GridMap.INVALID_CELL_ITEM)
@@ -231,11 +270,37 @@ func _finish_mining() -> void:
 
 	if ore != null:
 		print("[挖掘] 挖完 %s（耐久 %.0f），掉落 %.1f，金币 +%d" % [ore.ore_name, _target_hp_max, ore.drop, roundi(value)])
+		_add_cargo(ore.drop)
 		Game.add_coins(value)
 		# 后面要接背包 / 统计时连这个信号即可
 		drop_gained.emit(ore.ore_name, value)
 
 	_reset_target()
+
+# ---------------------------------------------------------------- 货舱
+
+func cargo_max() -> int:
+	if _data != null:
+		return maxi(_data.cargo_max, 0)
+	return 0
+
+## 装载（单位）。超出容量时按容量截断，GDD 4.5：满载后仍可移动，只是装不进去
+func _add_cargo(amount : float) -> void:
+	var units : int = maxi(roundi(amount), 1)
+	var limit := cargo_max()
+	var next := _cargo + units
+	if limit > 0:
+		next = mini(next, limit)
+	_cargo = next
+	cargo_changed.emit(_cargo, limit)
+
+## HUD 读货舱状态（x = 当前装载，y = 容量）
+func get_cargo_state() -> Vector2i:
+	return Vector2i(_cargo, cargo_max())
+
+func is_cargo_full() -> bool:
+	var limit := cargo_max()
+	return limit > 0 and _cargo >= limit
 
 func _abort_mining() -> void:
 	_reset_target()

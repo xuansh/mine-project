@@ -1,8 +1,7 @@
 [gd_resource type="Theme" format=3 uid="uid://cv3jfjqc8v5nb"]
 
-[sub_resource type="SystemFont" id="SystemFont_ui"]
-font_names = PackedStringArray("Microsoft YaHei UI", "Microsoft YaHei", "Noto Sans CJK SC", "Segoe UI", "Noto Sans")
+[ext_resource type="FontFile" uid="uid://dc53gr162sfom" path="res://Assets/Fonts/ChangBanDianSong-16-SC.ttf" id="1_font"]
 
 [resource]
-default_font = SubResource("SystemFont_ui")
+default_font = ExtResource("1_font")
 default_font_size = 16

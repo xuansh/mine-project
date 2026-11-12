@@ -1,9 +1,9 @@
 extends Control
 
-## Control.tscn 的根节点：负责在「矿区」「HUD」「升级树」之间协调。
-## 布局（1920x1080 主场景）：SubViewportContainer 占右上区域，
-## 左侧空白栏和底部空白带留给 HUD（窗口级 CanvasLayer）。
-## 升级树在 SubViewport 内的 layer=10 CanvasLayer，由这里统一开关。
+## Control.tscn 的根节点：负责在「矿区」「HUD」「改装终端」之间协调。
+## 窗口分三区（GDD 4.8.1）：左栏 373 / 右上主区 1547×802 / 底栏 278。
+## 改装终端是主区的子场景，挂 SubViewport 内 CanvasLayer(layer=10)，
+## 与矿区 3D 并存、靠可见性切换——不占全屏，也不另开窗口层。
 
 @onready var _skill_tree_layer : CanvasLayer = $SubViewportContainer/SubViewport/SkillTreeLayer
 @onready var _skill_tree : SkillTree = $SubViewportContainer/SubViewport/SkillTreeLayer/SkillTree

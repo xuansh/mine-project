@@ -18,7 +18,6 @@ fog_light_color = Color(0.360784, 0.34902, 0.458824, 1)
 fog_light_energy = 0.2
 fog_density = 0.02
 fog_aerial_perspective = 0.4
-volumetric_fog_enabled = true
 volumetric_fog_density = 0.015
 volumetric_fog_albedo = Color(0.54902, 0.529412, 0.619608, 1)
 volumetric_fog_anisotropy = 0.75

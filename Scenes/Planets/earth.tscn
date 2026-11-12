@@ -24,11 +24,11 @@ glow_levels/4 = 0.5
 glow_levels/5 = 0.2
 glow_hdr_threshold = 0.0
 fog_mode = 1
-fog_light_color = Color(0, 0, 0, 1)
+fog_light_color = Color(0.54901963, 0.5294118, 0.61960787, 1)
 fog_density = 1.0
 fog_depth_begin = 5.0
 fog_depth_end = 15.0
-volumetric_fog_albedo = Color(0.40578339, 0.40578339, 0.4057832, 1)
+volumetric_fog_albedo = Color(0.54901963, 0.5294118, 0.61960787, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_halo"]
 render_priority = 0
@@ -72,6 +72,7 @@ transform = Transform3D(1, 0, 0, 0, 0.9483799, 0.3171366, 0, -0.3171366, 0.94837
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=165029591]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 0.3, 1.8)
+doppler_tracking = 1
 projection = 1
 current = true
 size = 1.05

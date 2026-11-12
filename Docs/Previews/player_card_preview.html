@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>玩家基础信息 · 布局预览</title>
+<style>
+  :root{
+    --bg:#05040A; --fill:#0B0A12; --card:#181420;
+    --line:#6E6884; --line2:#2A2438; --out:#8B84A8;
+    --text:#F0EEE4; --muted:#A098B5; --amber:#D9A227; --empty:#282339;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:"Courier New",monospace;
+    padding:28px 30px 40px; -webkit-font-smoothing:none;
+  }
+  h1{font-size:15px;letter-spacing:2px;font-weight:normal;color:var(--muted);margin-bottom:6px}
+  .sub{font-size:11px;color:#6b6580;margin-bottom:22px;line-height:1.7}
+  .row{display:flex;gap:22px;align-items:flex-start}
+
+  .col{width:373px;flex:0 0 373px}
+  .col-title{
+    font-size:12px;color:var(--amber);letter-spacing:1px;
+    margin-bottom:8px;padding-left:2px;
+  }
+  .col-note{
+    font-size:11px;color:#6b6580;line-height:1.75;margin-top:10px;
+    border-left:2px solid var(--line2);padding-left:9px;
+  }
+
+  /* ---------- 左栏整体 ---------- */
+  .hud{
+    position:relative;width:373px;height:1080px;
+    background:var(--fill);
+    border:3px solid var(--out);
+  }
+  .hud::before{
+    content:"";position:absolute;inset:7px;border:2px solid var(--line2);pointer-events:none;
+  }
+  .bk{position:absolute;background:var(--out);pointer-events:none}
+  .bk.tl-h{left:10px;top:10px;width:40px;height:2px}
+  .bk.tl-v{left:10px;top:10px;width:2px;height:40px}
+  .bk.tr-h{right:10px;top:10px;width:40px;height:2px}
+  .bk.tr-v{right:10px;top:10px;width:2px;height:40px}
+  .bk.bl-h{left:10px;bottom:10px;width:40px;height:2px}
+  .bk.bl-v{left:10px;bottom:10px;width:2px;height:40px}
+  .bk.br-h{right:10px;bottom:10px;width:40px;height:2px}
+  .bk.br-v{right:10px;bottom:10px;width:2px;height:40px}
+  .stud{position:absolute;width:4px;height:4px;background:var(--amber)}
+  .stud.a{left:4px;top:4px}.stud.b{right:4px;top:4px}
+  .stud.c{left:4px;bottom:4px}.stud.d{right:4px;bottom:4px}
+
+  .inner{position:absolute;left:24px;right:21px;top:24px;display:flex;flex-direction:column;gap:8px}
+
+  /* ---------- 星球面板 ---------- */
+  .planet{
+    background:var(--card);border:2px solid var(--line);
+    padding:5px;position:relative;
+  }
+  .earth{
+    height:184px;position:relative;overflow:hidden;
+    background:radial-gradient(circle at 62% 46%, #14304a 0%, #0a1626 62%, #060a12 100%);
+  }
+  .earth::after{
+    content:"";position:absolute;left:42%;top:12%;width:150px;height:150px;
+    background:
+      radial-gradient(circle at 30% 30%, #6fb0d8 0%, #3c7fa8 42%, #1d4a66 78%, #12303f 100%);
+    border:1px solid #7fc3e8;border-radius:50%;
+    box-shadow:0 0 0 3px rgba(120,200,240,.10);
+  }
+  .cap{
+    position:absolute;left:0;right:0;top:52%;text-align:center;
+    font-size:13px;color:var(--text);text-shadow:1px 1px 0 #000;
+  }
+
+  /* ---------- 通用卡片件 ---------- */
+  .card{background:var(--card);border:2px solid var(--line);padding:9px 10px}
+  .chip{
+    display:inline-block;background:#12101A;border:1px solid var(--line);
+    color:var(--muted);font-size:11px;line-height:16px;padding:0 6px;
+  }
+  .num{color:var(--text);text-shadow:2px 2px 0 rgba(0,0,0,.8)}
+  .amber{color:var(--amber);text-shadow:2px 2px 0 rgba(0,0,0,.8)}
+  .muted{color:var(--muted)}
+  .seg{display:flex;gap:2px;height:10px}
+  .seg i{flex:1;background:var(--empty)}
+  .seg i.on{background:var(--amber)}
+
+  /* ---------- 方案 A ---------- */
+  .lvbadge{
+    border:2px solid var(--amber);color:var(--amber);font-size:15px;
+    padding:2px 6px;line-height:1;white-space:nowrap;
+  }
+  .aTop{display:flex;align-items:center;gap:8px;margin:7px 0 6px}
+  .aTop .seg{flex:1}
+  .aRow{display:flex;justify-content:space-between;align-items:baseline;
+    border-top:1px solid #211D2E;padding:6px 0 5px;font-size:12px}
+  .aRow:first-of-type{border-top:none}
+  .aRow b{font-size:15px;font-weight:normal}
+
+  /* ---------- 方案 B ---------- */
+  .bGrid{display:flex;gap:6px;margin-top:7px}
+  .bCell{
+    flex:1;border:1px solid var(--line2);background:#12101A;
+    padding:6px 4px 5px;text-align:center;
+  }
+  .bCell .k{font-size:10px;color:var(--muted);letter-spacing:1px}
+  .bCell .v{font-size:16px;margin-top:3px}
+
+  /* ---------- 方案 C ---------- */
+  .cTop{display:flex;align-items:center;gap:7px;margin:7px 0 6px}
+  .cTop .seg{flex:1}
+  .cTags{display:flex;gap:5px}
+  .cTag{
+    flex:1;min-width:0;border:1px solid var(--line2);background:#12101A;
+    padding:3px 7px;display:flex;justify-content:space-between;
+    align-items:baseline;font-size:11px;color:var(--muted);
+  }
+  .cTag b{font-size:13px;font-weight:normal}
+</style>
+</head>
+<body>
+
+<h1>左栏 · 玩家基础信息 布局预览（1:1，373 × 1080 设计基准）</h1>
+<div class="sub">
+  位置：PlanetPanel 正下方　｜　配色沿用 #0B0A12 / #181420 / #6E6884 / #F0EEE4 / 唯一强调色 #D9A227<br>
+  字体为占位（项目像素字体未到位）。数字用等宽，千分位分隔；分段条沿用 <code>HudSegmentBar</code>（gap 2px，空槽 #282339）。
+</div>
+
+<div class="row">
+
+  <!-- ============ 方案 A ============ -->
+  <div class="col">
+    <div class="col-title">方案 A · 矿工档案卡（推荐）</div>
+    <div class="hud">
+      <div class="bk tl-h"></div><div class="bk tl-v"></div>
+      <div class="bk tr-h"></div><div class="bk tr-v"></div>
+      <div class="bk bl-h"></div><div class="bk bl-v"></div>
+      <div class="bk br-h"></div><div class="bk br-v"></div>
+      <div class="stud a"></div><div class="stud b"></div><div class="stud c"></div><div class="stud d"></div>
+
+      <div class="inner">
+        <div class="planet"><div class="earth"><div class="cap">地球</div></div></div>
+
+        <div class="card">
+          <span class="chip">矿工档案</span>
+          <div class="aTop">
+            <span class="lvbadge">LV 07</span>
+            <div class="seg">
+              <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i>
+              <i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
+          </div>
+          <div class="aRow"><span class="muted">经验</span><b class="num">1 240 / 2 000</b></div>
+          <div class="aRow"><span class="muted">金币</span><b class="num">12,480</b></div>
+          <div class="aRow"><span class="muted">技能点</span><b class="amber">3 可用</b></div>
+          <div class="aRow"><span class="muted">最深纪录</span><b class="num">138 M</b></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-note">
+      纵向 label/value 四行，信息密度最高；LV 徽章 + 分段经验条一眼看出“还差多少升级”。
+      技能点用琥珀色，有可用点数时才会跳出来。
+    </div>
+  </div>
+
+  <!-- ============ 方案 B ============ -->
+  <div class="col">
+    <div class="col-title">方案 B · 三格指标 + 经验条</div>
+    <div class="hud">
+      <div class="bk tl-h"></div><div class="bk tl-v"></div>
+      <div class="bk tr-h"></div><div class="bk tr-v"></div>
+      <div class="bk bl-h"></div><div class="bk bl-v"></div>
+      <div class="bk br-h"></div><div class="bk br-v"></div>
+      <div class="stud a"></div><div class="stud b"></div><div class="stud c"></div><div class="stud d"></div>
+
+      <div class="inner">
+        <div class="planet"><div class="earth"><div class="cap">地球</div></div></div>
+
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span class="chip">机体状态</span>
+            <span class="lvbadge" style="font-size:11px;padding:1px 4px">LV 07</span>
+          </div>
+          <div class="bGrid">
+            <div class="bCell"><div class="k">金币</div><div class="v num">12,480</div></div>
+            <div class="bCell"><div class="k">技能点</div><div class="v amber">3</div></div>
+            <div class="bCell"><div class="k">最深</div><div class="v num">138M</div></div>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center;margin-top:8px">
+            <span class="muted" style="font-size:10px">EXP</span>
+            <div class="seg" style="flex:1">
+              <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i>
+              <i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
+            <span class="num" style="font-size:11px">62%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-note">
+      三格等宽，扫视最快；经验和等级被压到第二层。适合后续把“油量/货舱”也塞进同一套格子。
+    </div>
+  </div>
+
+  <!-- ============ 方案 C ============ -->
+  <div class="col">
+    <div class="col-title">方案 C · 单行紧凑</div>
+    <div class="hud">
+      <div class="bk tl-h"></div><div class="bk tl-v"></div>
+      <div class="bk tr-h"></div><div class="bk tr-v"></div>
+      <div class="bk bl-h"></div><div class="bk bl-v"></div>
+      <div class="bk br-h"></div><div class="bk br-v"></div>
+      <div class="stud a"></div><div class="stud b"></div><div class="stud c"></div><div class="stud d"></div>
+
+      <div class="inner">
+        <div class="planet"><div class="earth"><div class="cap">地球</div></div></div>
+
+        <div class="card">
+          <div class="cTop">
+            <span class="lvbadge" style="font-size:12px;padding:1px 5px">LV 07</span>
+            <div class="seg" style="height:8px">
+              <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i>
+              <i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
+            <span class="amber" style="font-size:11px">+3</span>
+          </div>
+          <div class="cTags">
+            <div class="cTag"><span>金币</span><b class="num">12,480</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-note">
+      只占 62px 高，几乎不挤压下方作业面板。代价：只留金币，经验仅剩进度感；
+      适合后续面板很多、左栏吃紧的情况。
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

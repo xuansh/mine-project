@@ -41,3 +41,167 @@ func get_group_level(group : StringName) -> int:
 func add_group_level(group : StringName) -> void:
 	upgrade_levels[group] = get_group_level(group) + 1
 	upgrades_changed.emit(group, upgrade_levels[group])
+
+# ---------------------------------------------------------------- 玩家成长
+
+## 等级 / 经验 / 技能点 / 最深纪录变化时发出（金币走 coins_changed，不在这条里）
+signal stats_changed
+
+## 当前等级，从 1 开始
+var level : int = 1
+## 当前经验，升到 xp_to_next 即升级并清零进位
+var xp : int = 0
+## 升下一级所需经验，每次升级 ×1.5
+var xp_to_next : int = 100
+## 可用技能点（技能树消耗）
+var skill_points : int = 0
+## 历史最深掘进纪录（米），只增不减
+var best_depth : float = 0.0
+
+## 加经验，够数自动连升（一次性加很多也正确）
+func add_xp(amount : float) -> void:
+	var gained := roundi(amount)
+	if gained <= 0:
+		return
+	xp += gained
+	while xp >= xp_to_next:
+		xp -= xp_to_next
+		level += 1
+		xp_to_next = roundi(float(xp_to_next) * 1.5)
+	stats_changed.emit()
+
+## 加技能点（amount 可为负，代表消耗）
+func add_skill_points(amount : int) -> void:
+	if amount == 0:
+		return
+	skill_points += amount
+	stats_changed.emit()
+
+## 汇报当前掘进深度，超过历史纪录才更新并广播
+func report_depth(depth : float) -> void:
+	if depth > best_depth:
+		best_depth = depth
+		stats_changed.emit()
+
+# ---------------------------------------------------------------- 改装终端（GDD 4.10）
+
+## 已解锁 / 已安装的节点变化时发出（扣费与存档都挂这里）
+signal skills_changed
+
+## 存档格式版本。以后字段不兼容时靠它做迁移
+const SAVE_VERSION : int = 1
+
+## 技能树数据源。改装终端与效果聚合都读这一份，保证「一份数据两种读法」
+var skill_tree_data : SkillTreeData = preload("res://Resources/SkillTree/basic_skill_tree.tres")
+
+## 已解锁节点 id，顺序无关
+var unlocked_skills : Array[StringName] = []
+
+func is_skill_unlocked(skill_id : StringName) -> bool:
+	return unlocked_skills.has(skill_id)
+
+## 取节点数据（带空树保护）。UI 与聚合层都从这里拿，别各自去碰 skill_tree_data
+func get_skill_data(skill_id : StringName) -> SkillNodeData:
+	if skill_tree_data == null:
+		return null
+	return skill_tree_data.get_node_data(skill_id)
+
+func get_skill_cost(skill_id : StringName) -> int:
+	var data := get_skill_data(skill_id)
+	return data.cost if data != null else 0
+
+func get_unlocked_count() -> int:
+	return unlocked_skills.size()
+
+func get_skill_total() -> int:
+	return skill_tree_data.nodes.size() if skill_tree_data != null else 0
+
+## 查这个节点对应的机制是否已实现（GDD 4.10.3 批次 2 的四个键）
+## 未就绪的节点在终端里照常显示，但不可购买，也不隐藏
+func is_skill_pending(skill_id : StringName) -> bool:
+	var data := get_skill_data(skill_id)
+	return data != null and _is_mechanic_pending(data.effect_key)
+
+## 依赖尚未实现的机制：硬岩判定 / 稀有度 / 转向 / 挖掘减速
+static func _is_mechanic_pending(effect_key : StringName) -> bool:
+	return effect_key == &"hard_ore_unlock" \
+		or effect_key == &"rare_value" \
+		or effect_key == &"turn_speed" \
+		or effect_key == &"no_slow_dig"
+
+## 三态判定的唯一口径（GDD 4.10.4）：父节点已解锁 + 未买过 + 金币够
+func can_unlock_skill(skill_id : StringName) -> bool:
+	if is_skill_unlocked(skill_id):
+		return false
+	if is_skill_pending(skill_id):
+		return false
+	var data := get_skill_data(skill_id)
+	if data == null:
+		return false
+	return is_skill_parent_unlocked(skill_id) and coins >= data.cost
+
+## 父节点是否已解锁（给 UI 区分「未解锁」和「钱不够」用）
+func is_skill_parent_unlocked(skill_id : StringName) -> bool:
+	if skill_tree_data == null:
+		return false
+	var parent := skill_tree_data.get_parent_of(skill_id)
+	return parent == null or is_skill_unlocked(parent.id)
+
+## 扣费并解锁。费用从节点数据读，调用方不用自己算
+func unlock_skill(skill_id : StringName) -> bool:
+	if not can_unlock_skill(skill_id):
+		return false
+	var cost := get_skill_cost(skill_id)
+	if cost > 0 and not spend_coins(cost):
+		return false
+	unlocked_skills.append(skill_id)
+	skills_changed.emit()
+	return true
+
+## 由已解锁节点聚合出加成集合。空集合时返回空对象，调用方用 is_empty() 判断
+func get_modifiers() -> SkillModifiers:
+	var mods := SkillModifiers.new()
+	if skill_tree_data == null:
+		return mods
+	for node_data in skill_tree_data.nodes:
+		if node_data == null or not is_skill_unlocked(node_data.id):
+			continue
+		mods.add_by_key(node_data.effect_key, node_data.effect_value)
+	return mods
+
+# ---------------------------------------------------------------- 存档
+
+## 存档快照。只放需要跨会话保留的字段，UI 状态一律不入档
+func to_dict() -> Dictionary:
+	var ids := PackedStringArray()
+	for id in unlocked_skills:
+		ids.append(String(id))
+	return {
+		"version": SAVE_VERSION,
+		"coins": coins,
+		"level": level,
+		"xp": xp,
+		"xp_to_next": xp_to_next,
+		"best_depth": best_depth,
+		"unlocked_skills": ids,
+	}
+
+## 读档回填。缺字段一律走默认值，兼容旧档与手改坏的档
+func apply_dict(data : Dictionary) -> void:
+	coins = int(data.get("coins", 0))
+	level = maxi(int(data.get("level", 1)), 1)
+	xp = maxi(int(data.get("xp", 0)), 0)
+	xp_to_next = maxi(int(data.get("xp_to_next", 100)), 1)
+	best_depth = maxf(float(data.get("best_depth", 0.0)), 0.0)
+
+	unlocked_skills.clear()
+	var ids = data.get("unlocked_skills", PackedStringArray())
+	if ids is PackedStringArray or ids is Array:
+		for id in ids:
+			var skill_id := StringName(str(id))
+			if skill_id != &"" and not unlocked_skills.has(skill_id):
+				unlocked_skills.append(skill_id)
+
+	coins_changed.emit(coins, 0)
+	stats_changed.emit()
+	skills_changed.emit()

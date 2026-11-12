@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>改装终端 · 布局验证稿（1920×1080）</title>
+<style>
+  :root{
+    --out:#05040A; --fill:#0B0A12; --cell:#12100B;
+    --case:#8B84A8; --case-in:#2A2438;
+    --amber:#D9A227; --amber-dim:#6E5A1E; --amber-deep:#4A3D22;
+    --text:#F0EEE4; --muted:#8C8264; --line:#2A2438;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#000}
+  body{
+    width:1920px;height:1080px;position:relative;overflow:hidden;
+    background:var(--out);color:var(--text);
+    font-family:"Courier New","SimSun",monospace;
+    -webkit-font-smoothing:none;
+  }
+
+  /* ---------- 扫描线 / 机壳 ---------- */
+  .scan{
+    position:absolute;inset:0;pointer-events:none;z-index:90;
+    background:repeating-linear-gradient(0deg,
+      rgba(0,0,0,.085) 0 1px, rgba(0,0,0,0) 1px 4px);
+  }
+  .vig{position:absolute;inset:0;pointer-events:none;z-index:89;
+    background:radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,.45) 100%)}
+
+  .case{position:absolute;inset:28px;border:3px solid var(--case);background:var(--fill)}
+  .case::before{content:"";position:absolute;inset:7px;border:2px solid var(--case-in);pointer-events:none}
+  .bk{position:absolute;background:var(--case);pointer-events:none;z-index:2}
+  .bk.tl-h{left:10px;top:10px;width:44px;height:2px}
+  .bk.tl-v{left:10px;top:10px;width:2px;height:44px}
+  .bk.tr-h{right:10px;top:10px;width:44px;height:2px}
+  .bk.tr-v{right:10px;top:10px;width:2px;height:44px}
+  .bk.bl-h{left:10px;bottom:10px;width:44px;height:2px}
+  .bk.bl-v{left:10px;bottom:10px;width:2px;height:44px}
+  .bk.br-h{right:10px;bottom:10px;width:44px;height:2px}
+  .bk.br-v{right:10px;bottom:10px;width:2px;height:44px}
+  .stud{position:absolute;width:4px;height:4px;background:var(--amber);z-index:2}
+  .stud.a{left:4px;top:4px}.stud.b{right:4px;top:4px}
+  .stud.c{left:4px;bottom:4px}.stud.d{right:4px;bottom:4px}
+
+  /* ---------- 布局 ---------- */
+  .top{position:absolute;left:44px;right:44px;top:42px;height:60px;
+    display:flex;align-items:center;justify-content:space-between;
+    border-bottom:2px solid var(--case-in);padding-bottom:12px}
+  .brand{display:flex;align-items:baseline;gap:14px}
+  .brand b{font-size:26px;font-weight:normal;letter-spacing:3px;color:var(--amber);
+    text-shadow:2px 2px 0 #000}
+  .brand .sub{font-size:13px;color:var(--muted);letter-spacing:2px}
+  .stats{display:flex;align-items:baseline;gap:26px;font-size:14px;color:var(--muted)}
+  .stats b{font-weight:normal;font-size:19px;color:var(--text);text-shadow:2px 2px 0 #000;
+    margin-left:6px;letter-spacing:1px}
+  .stats .amber{color:var(--amber)}
+  .esc{font-size:13px;color:var(--amber-dim);border:2px solid var(--case-in);padding:4px 8px}
+
+  .body{position:absolute;left:44px;right:44px;top:126px;bottom:64px;
+    display:flex;gap:24px}
+
+  /* ---------- 左：分支索引 ---------- */
+  .index{width:300px;flex:0 0 300px;display:flex;flex-direction:column;gap:0}
+  .sec{font-size:12px;letter-spacing:3px;color:var(--amber-dim);padding:0 0 8px 2px}
+  .brow{display:flex;align-items:baseline;justify-content:space-between;
+    padding:13px 10px;border-left:3px solid transparent;font-size:16px;
+    color:var(--muted);border-bottom:1px solid #171422}
+  .brow .no{font-size:12px;color:var(--amber-dim);margin-right:10px}
+  .brow .n{font-size:13px;color:var(--amber-dim)}
+  .brow.on{border-left-color:var(--amber);color:var(--text);
+    background:linear-gradient(90deg,rgba(217,162,39,.10),rgba(217,162,39,0) 70%)}
+  .brow.on .n{color:var(--amber)}
+  .brow.full .n{color:var(--amber)}
+  .idx-foot{margin-top:auto;font-size:12px;line-height:1.9;color:#5E5640;
+    border-top:2px solid var(--case-in);padding-top:12px}
+
+  /* ---------- 中：树 ---------- */
+  .tree{flex:1;position:relative;min-width:0}
+  .tree svg{position:absolute;inset:0;width:100%;height:100%;z-index:1}
+  .node{position:absolute;z-index:3;background:var(--cell);
+    border:2px solid var(--amber-deep);cursor:pointer}
+  .node.sq{border-radius:0}
+  .node.unlocked{border-color:var(--amber)}
+  .node.available{border-color:var(--amber);box-shadow:0 0 0 2px rgba(217,162,39,.16)}
+  .node.sel{box-shadow:0 0 0 2px var(--amber),0 0 0 5px rgba(217,162,39,.14)}
+  .node.locked{background:#0E0C09;border-color:#332B19}
+  .node.unafford{border-color:#8A6A20}
+  .node.pending{border-color:var(--amber-dim);background:#0E0C09}
+
+  .hex{clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
+  .hexwrap{position:absolute;z-index:3;background:var(--amber)}
+  .hexwrap.locked{background:#332B19}
+  .hexwrap.pending{background:var(--amber-dim)}
+  .hexwrap .in{position:absolute;inset:2px;background:var(--cell);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
+  .hexwrap.locked .in{background:#0E0C09}
+  .hexwrap .glyph{position:absolute;inset:0;display:flex;align-items:center;
+    justify-content:center;font-size:20px;color:var(--amber)}
+  .hexwrap.locked .glyph{color:#4A3D22}
+
+  .ico{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-size:17px;color:var(--amber);letter-spacing:0}
+  .node.locked .ico{color:#4A3D22}
+  .node.unafford .ico{color:#8A6A20}
+  .node.pending .ico{color:var(--amber-dim)}
+
+  .nlabel{position:absolute;left:50%;transform:translateX(-50%);
+    width:164px;text-align:center;font-size:13px;line-height:18px;
+    color:var(--text);text-shadow:1px 1px 0 #000;z-index:4;pointer-events:none}
+  .nlabel.locked{color:#6B6047}
+  .nlabel.unafford{color:#8A6A20}
+  .nlabel.pending{color:var(--amber-dim)}
+  .badge{position:absolute;right:-7px;top:-7px;width:14px;height:14px;background:var(--amber);
+    color:#0B0A12;font-size:11px;line-height:14px;text-align:center;z-index:5}
+
+  .legend{position:absolute;left:0;right:0;bottom:0;display:flex;gap:22px;
+    font-size:12px;color:var(--muted);border-top:2px solid var(--case-in);padding-top:10px}
+  .legend span{display:flex;align-items:center;gap:7px}
+  .sw{width:12px;height:12px;border:2px solid var(--amber)}
+  .sw.l{border-color:#332B19}
+  .sw.u{border-color:#8A6A20}
+  .sw.p{border-color:var(--amber-dim)}
+
+  /* ---------- 右：详情 ---------- */
+  .detail{width:420px;flex:0 0 420px;border:2px solid var(--case);
+    background:#0A0810;padding:20px 20px 18px;display:flex;flex-direction:column}
+  .st{font-size:12px;letter-spacing:2px;color:var(--amber);margin-bottom:12px}
+  .title{font-size:26px;letter-spacing:2px;text-shadow:2px 2px 0 #000;margin-bottom:8px}
+  .eff{font-size:16px;color:var(--amber);margin-bottom:16px}
+  .div{height:2px;background:var(--line);margin-bottom:14px}
+  .desc{font-size:13px;line-height:24px;color:#A79C7E;min-height:96px}
+  .meta{margin-top:10px;font-size:13px;line-height:26px;color:var(--muted)}
+  .meta i{display:inline-block;width:72px;font-style:normal;color:#5E5640}
+  .meta b{font-weight:normal;color:var(--text)}
+  .btn{margin-top:auto;height:52px;border:2px solid var(--amber);background:#14100A;
+    color:var(--amber);font-size:19px;letter-spacing:6px;
+    display:flex;align-items:center;justify-content:center;font-family:inherit}
+  .btn.off{border-color:var(--case-in);color:#5E5640;background:#0B0A12;letter-spacing:2px;font-size:15px}
+  .foot{margin-top:10px;font-size:12px;color:#5E5640;text-align:center;letter-spacing:1px}
+
+  .statusbar{position:absolute;left:44px;right:44px;bottom:26px;height:24px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:12px;color:var(--muted);letter-spacing:1px}
+  .cur{display:inline-block;width:9px;height:14px;background:var(--amber);
+    vertical-align:-2px;margin-left:4px;animation:bl 1s steps(1) infinite}
+  @keyframes bl{0%,50%{opacity:1}50.01%,100%{opacity:0}}
+</style>
+</head>
+<body>
+
+<div class="case">
+  <div class="bk tl-h"></div><div class="bk tl-v"></div>
+  <div class="bk tr-h"></div><div class="bk tr-v"></div>
+  <div class="bk bl-h"></div><div class="bk bl-v"></div>
+  <div class="bk br-h"></div><div class="bk br-v"></div>
+  <div class="stud a"></div><div class="stud b"></div><div class="stud c"></div><div class="stud d"></div>
+</div>
+
+<div class="top">
+  <div class="brand"><b>改装终端</b><span class="sub">TERMINAL // RIG-01</span></div>
+  <div class="stats">
+    <span>余额<b class="amber">180¢</b></span>
+    <span>节点<b>3/15</b></span>
+    <span class="esc">ESC 断开</span>
+  </div>
+</div>
+
+<div class="body">
+
+  <!-- 左：分支索引 -->
+  <div class="index">
+    <div class="sec">分 支 索 引</div>
+    <div class="brow"><span><span class="no">00</span>总览</span><span class="n">3 / 15</span></div>
+    <div class="brow on"><span><span class="no">01</span>钻头</span><span class="n">1 / 4</span></div>
+    <div class="brow"><span><span class="no">02</span>引擎</span><span class="n">1 / 4</span></div>
+    <div class="brow"><span><span class="no">03</span>经济</span><span class="n">0 / 3</span></div>
+    <div class="brow"><span><span class="no">04</span>续航</span><span class="n">0 / 3</span></div>
+    <div class="idx-foot">
+      状态：停靠中<br>
+      矿区时间：已冻结<br>
+      机器：RIG-01 · 一号机<br>
+      下一趟生效
+    </div>
+  </div>
+
+  <!-- 中：四向树 -->
+  <div class="tree" id="tree">
+    <svg id="links"></svg>
+    <div class="legend">
+      <span><i class="sw"></i>已安装</span>
+      <span><i class="sw"></i>可安装</span>
+      <span><i class="sw l"></i>未解锁</span>
+      <span><i class="sw u"></i>余额不足</span>
+      <span><i class="sw p"></i>系统未就绪</span>
+    </div>
+  </div>
+
+  <!-- 右：详情 -->
+  <div class="detail">
+    <div class="st">○  可安装</div>
+    <div class="title">深孔钻</div>
+    <div class="eff">高耐久矿伤害 +20%</div>
+    <div class="div"></div>
+    <div class="desc">专攻高耐久矿层：铁矿、铜矿这类硬骨头，打起来更顺手。装配后对耐久 ≥ 18 的矿石追加伤害。</div>
+    <div class="meta">
+      <div><i>前置</i><b>合金钻头</b></div>
+      <div><i>费用</i><b>120¢</b></div>
+      <div><i>当前余额</i><b>180¢</b></div>
+      <div><i>所在分支</i><b>01 · 钻头线</b></div>
+    </div>
+    <div class="btn">安 装</div>
+    <div class="foot">安装后不可撤回 · 本次下潜生效</div>
+  </div>
+
+</div>
+
+<div class="statusbar">
+  <span>&gt; 选择分支以查看改装项<span class="cur"></span></span>
+  <span>SCANLINE 8% · PHOSPHOR AMBER</span>
+</div>
+
+<script>
+const CX = null; // 由容器计算
+const NODES = [
+  {id:"root",            x:0,    y:0,    s:88, hex:true,  st:"unlocked", t:"挖掘核心", g:"◆"},
+  {id:"drill_attack",    x:-150, y:-100, s:64, hex:false, st:"unlocked", t:"合金钻头", g:"⛏"},
+  {id:"drill_frequency", x:-260, y:-170, s:64, hex:false, st:"unafford", t:"高频钻机", g:"≈"},
+  {id:"breaker",         x:-370, y:-240, s:88, hex:true,  st:"pending",  t:"破碎者",   g:"✖"},
+  {id:"deep_drill",      x:-140, y:-220, s:64, hex:false, st:"sel",      t:"深孔钻",   g:"▽"},
+  {id:"excavator_speed", x:-160, y:100,  s:64, hex:false, st:"unlocked", t:"涡轮引擎", g:"◷"},
+  {id:"gearbox",         x:-280, y:170,  s:64, hex:false, st:"available",t:"二级变速箱",g:"⚙"},
+  {id:"hydraulic_turn",  x:-300, y:40,   s:64, hex:false, st:"available",t:"液压转向", g:"↻"},
+  {id:"inertia_weight",  x:-160, y:220,  s:64, hex:false, st:"available",t:"惯性配重", g:"▤"},
+  {id:"ore_value",       x:160,  y:-100, s:64, hex:false, st:"available",t:"矿石精炼", g:"¢"},
+  {id:"refine_furnace",  x:280,  y:-180, s:88, hex:true,  st:"locked",   t:"精选熔炉", g:"♨"},
+  {id:"cargo_bay",       x:160,  y:-220, s:64, hex:false, st:"locked",   t:"扩容货舱", g:"▣"},
+  {id:"fuel_tank",       x:150,  y:100,  s:64, hex:false, st:"available",t:"加大油箱", g:"▮"},
+  {id:"dual_fuel_line",  x:280,  y:40,   s:64, hex:false, st:"locked",   t:"双油路",   g:"∥"},
+  {id:"idle_low",        x:160,  y:220,  s:64, hex:false, st:"locked",   t:"低怠速系统",g:"·"},
+];
+const LINKS = [
+  ["root","drill_attack"],["drill_attack","drill_frequency"],["drill_frequency","breaker"],
+  ["drill_attack","deep_drill"],
+  ["root","excavator_speed"],["excavator_speed","gearbox"],["excavator_speed","hydraulic_turn"],
+  ["excavator_speed","inertia_weight"],
+  ["root","ore_value"],["ore_value","refine_furnace"],["ore_value","cargo_bay"],
+  ["root","fuel_tank"],["fuel_tank","dual_fuel_line"],["fuel_tank","idle_low"],
+];
+
+const tree = document.getElementById("tree");
+const svg  = document.getElementById("links");
+const R = tree.getBoundingClientRect();
+// 树的包围盒 x∈[-414,324] y∈[-284,252]，重心偏左上，整体右移下移做视觉配平
+const CENTER = { x: R.width/2 + 45, y: (R.height-36)/2 + 14 };
+
+const pos = {};
+for (const n of NODES) {
+  const cx = CENTER.x + n.x, cy = CENTER.y + n.y;
+  pos[n.id] = {x: cx, y: cy};
+
+  let el;
+  if (n.hex) {
+    el = document.createElement("div");
+    el.className = "hexwrap " + (n.st==="locked"?"locked":n.st==="pending"?"pending":"");
+    el.style.cssText = `left:${cx-n.s/2}px;top:${cy-n.s/2}px;width:${n.s}px;height:${n.s}px`;
+    el.innerHTML = `<div class="in"></div><div class="glyph">${n.g}</div>`;
+  } else {
+    el = document.createElement("div");
+    el.className = "node sq " + (n.st==="sel"?"available sel":n.st);
+    el.style.cssText = `left:${cx-n.s/2}px;top:${cy-n.s/2}px;width:${n.s}px;height:${n.s}px`;
+    el.innerHTML = `<div class="ico">${n.g}</div>`;
+    if (n.st === "pending") el.innerHTML += `<div class="badge">!</div>`;
+  }
+  tree.appendChild(el);
+
+  const lb = document.createElement("div");
+  lb.className = "nlabel " + (n.st==="locked"?"locked":n.st==="unafford"?"unafford":n.st==="pending"?"pending":"");
+  lb.style.cssText = `left:${cx}px;top:${cy+n.s/2+7}px`;
+  lb.textContent = n.t;
+  tree.appendChild(lb);
+}
+
+// 连线：三线叠画，硬边不抗锯齿
+for (const [a,b] of LINKS) {
+  const A = pos[a], B = pos[b];
+  const dim = NODES.find(n=>n.id===b).st === "locked";
+  const col = dim ? "#4A3D22" : "#D9A227";
+  for (const [w,op] of [[10,0.10],[4,0.24],[2,0.85]]) {
+    const l = document.createElementNS("http://www.w3.org/2000/svg","line");
+    l.setAttribute("x1",A.x); l.setAttribute("y1",A.y);
+    l.setAttribute("x2",B.x); l.setAttribute("y2",B.y);
+    l.setAttribute("stroke",col);
+    l.setAttribute("stroke-opacity",op);
+    l.setAttribute("stroke-width",dim?w*0.7:w);
+    svg.appendChild(l);
+  }
+}
+</script>
+
+<div class="scan"></div>
+<div class="vig"></div>
+
+</body>
+</html>
